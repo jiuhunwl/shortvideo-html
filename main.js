@@ -1,3 +1,12 @@
+/**
+*@Author: JH-Ahua
+*@CreateTime: 2025/5/19 下午14:08
+*@email: admin@bugpk.com
+*@blog: www.jiuhunwl.cn
+*@Api: api.bugpk.com
+*@tip: 短视频去水印解析前端
+*/
+
 // 工具函数：验证URL
 function isValidUrl(url) {
     try {
