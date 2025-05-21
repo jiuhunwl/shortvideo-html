@@ -588,7 +588,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // 平台与接口的映射关系
     const platformApiMap = {
         'all': 'https://api.bugpk.com/api/short_videos',
-        'douyin': 'http://localhost:63342/README.md/php/video_spider-master/douyin.php',
+        'douyin': 'https://api.bugpk.com/api/douyin.php',
         'kuaishou': 'https://api.bugpk.com/api/kuaishou',
         'bilibili': 'https://api.bugpk.com/api/bilibili'
     };
