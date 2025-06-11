@@ -1,3 +1,11 @@
+<!--/**-->
+<!--*@Author: JH-Ahua-->
+<!--*@CreateTime: 2025/6/12 上午12:03-->
+<!--*@email: admin@bugpk.com-->
+<!--*@blog: www.jiuhunwl.cn-->
+<!--*@Api: api.bugpk.com-->
+<!--*@tip: 短视频解析-->
+<!--*/-->
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -158,6 +166,48 @@
         #mobile-menu:not(.hidden) {
             opacity: 1;
             transform: translateY(0);
+        }
+
+        /* 图片画廊导航按钮样式 */
+        .gallery-nav-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 10;
+            background: rgba(0, 0, 0, 0.3);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 分页器样式调整 */
+        .gallery-pagination {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* 调整分页器小点样式 */
+        .gallery-pagination .swiper-pagination-bullet {
+            margin: 0 4px;
+            background: rgba(255, 255, 255, 0.7);
+            width: 8px;
+            height: 8px;
+        }
+
+        .gallery-pagination .swiper-pagination-bullet-active {
+            background: #ffffff;
+            transform: scale(1.2);
+        }
+
+        /* 调整下载按钮z-index确保在导航按钮之上 */
+        .swiper-slide .button-neomorphism {
+            z-index: 20;
         }
     </style>
 </head>
