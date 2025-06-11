@@ -1,12 +1,11 @@
 /**
 *@Author: JH-Ahua
-*@CreateTime: 2025/5/19 下午14:08
+*@CreateTime: 2025/6/12 上午12:02
 *@email: admin@bugpk.com
 *@blog: www.jiuhunwl.cn
 *@Api: api.bugpk.com
-*@tip: 短视频去水印解析前端
+*@tip: 短视频解析
 */
-
 // 工具函数：验证URL
 function isValidUrl(url) {
     try {
@@ -57,19 +56,19 @@ function formatNumber(num) {
 // 格式化时间戳为日期字符串
 function formatDate(timestamp) {
     if (!timestamp) return '';
-    
+
     // 如果时间戳是秒级，转换为毫秒级
     if (timestamp.toString().length <= 10) {
         timestamp = timestamp * 1000;
     }
-    
+
     const date = new Date(timestamp);
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     const hours = String(date.getHours()).padStart(2, '0');
     const minutes = String(date.getMinutes()).padStart(2, '0');
-    
+
     return `${year}-${month}-${day} ${hours}:${minutes}`;
 }
 
@@ -100,11 +99,11 @@ function showError(message) {
     hideAllContainers();
     const errorContainer = document.getElementById('error-container');
     const errorMessage = document.getElementById('error-message');
-    
+
     if (errorContainer && errorMessage) {
         errorMessage.textContent = message;
         errorContainer.classList.remove('hidden');
-        
+
         // 错误显示动画
         errorContainer.style.cssText = 'opacity: 0; transform: translateY(10px); transition: opacity 0.3s ease, transform 0.3s ease';
         setTimeout(() => {
@@ -125,15 +124,15 @@ function hideAllContainers() {
 function createInfoCard(label, value) {
     const card = document.createElement('div');
     card.className = 'bg-gray-50 rounded-lg p-4';
-    
+
     const labelEl = document.createElement('div');
     labelEl.className = 'text-sm text-gray-500 mb-1';
     labelEl.textContent = label;
-    
+
     const valueEl = document.createElement('div');
     valueEl.className = 'font-medium';
     valueEl.textContent = escapeHtml(value);
-    
+
     card.append(labelEl, valueEl);
     return card;
 }
@@ -143,7 +142,7 @@ function updateVideoPreview(previewVideo, videoPlaceholder, videoCover, videoDat
     // 重置资源
     previewVideo.src = '';
     videoCover.src = '';
-    
+
     // 处理封面
     if (videoData.cover) {
         videoCover.src = cleanUrl(videoData.cover);
@@ -159,13 +158,13 @@ function updateVideoPreview(previewVideo, videoPlaceholder, videoCover, videoDat
         previewVideo.src = cleanUrl(videoData.url);
         previewVideo.classList.remove('hidden');
         videoPlaceholder.classList.add('hidden');
-        
+
         if (videoData.coverUrl) {
             previewVideo.poster = cleanUrl(videoData.coverUrl);
         }
     } else {
         previewVideo.classList.add('hidden');
-        
+
         if (videoData.coverUrl) {
             videoCover.src = cleanUrl(videoData.coverUrl);
             videoCover.classList.remove('hidden');
@@ -179,30 +178,30 @@ function updateVideoPreview(previewVideo, videoPlaceholder, videoCover, videoDat
 function createMusicContainer(videoData) {
     const music = videoData.music || {};
     const musicContainer = document.createElement('div');
-    
+
     // 检查音乐数据是否存在且包含有效的URL
     const hasValidMusic = music && music.url && isValidUrl(music.url);
-    
+
     if (!hasValidMusic) {
         // 没有有效音乐链接，显示"视频原声"提示
         musicContainer.className = 'bg-gray-50 rounded-xl p-6 mb-6 mt-6';
-        
+
         const flexContainer = document.createElement('div');
         flexContainer.className = 'flex items-center';
-        
+
         const iconContainer = document.createElement('div');
         iconContainer.className = 'w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mr-4';
         iconContainer.innerHTML = '<i class="fa fa-music text-primary"></i>';
-        
+
         const textContainer = document.createElement('div');
         const titleHeading = document.createElement('h4');
         titleHeading.className = 'font-medium';
         titleHeading.textContent = '视频原声';
-        
+
         textContainer.appendChild(titleHeading);
         flexContainer.appendChild(iconContainer);
         flexContainer.appendChild(textContainer);
-        
+
         musicContainer.appendChild(flexContainer);
         return musicContainer;
     }
@@ -214,10 +213,10 @@ function createMusicContainer(videoData) {
     const musicUrl = cleanUrl(music.url);
 
     musicContainer.className = 'bg-gray-50 rounded-xl p-6 mb-6 mt-6';
-    
+
     const flexContainer = document.createElement('div');
     flexContainer.className = 'flex items-start';
-    
+
     // 添加音乐封面（如果有）
     if (musicAvatar) {
         const avatarImg = document.createElement('img');
@@ -226,60 +225,60 @@ function createMusicContainer(videoData) {
         avatarImg.onerror = "this.onerror=null;this.src='https://via.placeholder.com/80x80?text=封面'";
         flexContainer.appendChild(avatarImg);
     }
-    
+
     // 创建音乐信息容器
     const infoContainer = document.createElement('div');
     infoContainer.className = 'flex-1';
-    
+
     // 添加音乐标题
     const titleHeading = document.createElement('h4');
     titleHeading.className = 'font-medium';
     titleHeading.textContent = musicTitle;
-    
+
     // 添加音乐作者
     const authorPara = document.createElement('p');
     authorPara.className = 'text-sm text-gray-500';
     authorPara.textContent = musicAuthor;
-    
+
     // 添加标题和作者到信息容器
     const metaContainer = document.createElement('div');
     metaContainer.className = 'mb-4';
     metaContainer.appendChild(titleHeading);
     metaContainer.appendChild(authorPara);
-    
+
     // 创建音频控制和下载按钮的容器
     const controlContainer = document.createElement('div');
     controlContainer.className = 'flex items-center gap-4';
-    
+
     // 创建音频元素
     const audioElement = document.createElement('audio');
     audioElement.controls = true;
     audioElement.className = 'flex-1';
-    
+
     const sourceElement = document.createElement('source');
     sourceElement.src = musicUrl;
     sourceElement.type = 'audio/mpeg';
-    
+
     audioElement.appendChild(sourceElement);
-    
+
     // 创建下载按钮
     const downloadBtn = document.createElement('button');
     downloadBtn.className = 'px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark';
     downloadBtn.innerHTML = '<i class="fa fa-download"></i>';
     downloadBtn.onclick = () => downloadFile(musicUrl);
-    
+
     // 添加音频和下载按钮到控制容器
     controlContainer.appendChild(audioElement);
     controlContainer.appendChild(downloadBtn);
-    
+
     // 添加所有内容到音乐信息容器
     infoContainer.appendChild(metaContainer);
     infoContainer.appendChild(controlContainer);
-    
+
     // 添加音乐信息容器到主容器
     flexContainer.appendChild(infoContainer);
     musicContainer.appendChild(flexContainer);
-    
+
     return musicContainer;
 }
 
@@ -287,7 +286,7 @@ function createMusicContainer(videoData) {
 function createAuthorContainer(videoData) {
     const authorContainer = document.createElement('div');
     authorContainer.className = 'flex items-center mb-6';
-    
+
     if (videoData.avatar) {
         const avatarImg = document.createElement('img');
         avatarImg.src = cleanUrl(videoData.avatar);
@@ -295,20 +294,20 @@ function createAuthorContainer(videoData) {
         avatarImg.onerror = "this.onerror=null;this.src='https://via.placeholder.com/48x48?text=头像'";
         authorContainer.appendChild(avatarImg);
     }
-    
+
     const authorInfo = document.createElement('div');
     const authorName = document.createElement('div');
     authorName.className = 'font-medium';
     authorName.textContent = videoData.author || '未知作者';
-    
+
     const likeCount = document.createElement('div');
     likeCount.className = 'text-sm text-gray-500';
     likeCount.textContent = videoData.like ? `点赞 ${formatNumber(videoData.like)}` : '';
-    
+
     authorInfo.appendChild(authorName);
     authorInfo.appendChild(likeCount);
     authorContainer.appendChild(authorInfo);
-    
+
     return authorContainer;
 }
 
@@ -316,17 +315,17 @@ function createAuthorContainer(videoData) {
 function createInfoContainer(videoData) {
     const infoContainer = document.createElement('div');
     infoContainer.className = 'grid grid-cols-1 md:grid-cols-3 gap-4 mb-6';
-    
+
     // 视频标题
     infoContainer.appendChild(createInfoCard('作品标题', videoData.title || '未知标题'));
-    
+
     // 发布时间
     infoContainer.appendChild(createInfoCard('发布时间', formatDate(videoData.time) || '未知时间'));
-    
+
     // 作品类型
     const typeText = videoData.images && videoData.images.length > 0 ? '图片集' : '视频';
     infoContainer.appendChild(createInfoCard('作品类型', typeText));
-    
+
     return infoContainer;
 }
 
@@ -335,39 +334,39 @@ function createVideoPlayer(container, videoData) {
     // 创建视频预览容器
     const previewContainer = document.createElement('div');
     previewContainer.className = 'rounded-xl overflow-hidden mb-6 shadow-lg';
-    
+
     // 创建视频占位符
     const videoPlaceholder = document.createElement('div');
     videoPlaceholder.id = 'video-placeholder';
     videoPlaceholder.className = 'w-full h-64 bg-gray-100 flex items-center justify-center';
     videoPlaceholder.innerHTML = '<i class="fa fa-film text-5xl text-gray-300"></i>';
-    
+
     // 创建视频元素
     const previewVideo = document.createElement('video');
     previewVideo.id = 'preview-video';
     previewVideo.className = 'w-full hidden';
     previewVideo.setAttribute('controls', '');
-    
+
     // 创建封面图片
     const videoCover = document.createElement('img');
     videoCover.id = 'video-cover';
     videoCover.className = 'w-full hidden';
     videoCover.setAttribute('alt', '视频封面');
-    
+
     // 更新视频预览
     updateVideoPreview(previewVideo, videoPlaceholder, videoCover, videoData);
-    
+
     // 添加到预览容器
     previewContainer.append(videoPlaceholder, previewVideo, videoCover);
     container.appendChild(previewContainer);
-    
+
     // 创建下载按钮
     const downloadBtn = document.createElement('a');
     downloadBtn.id = 'download-btn';
     downloadBtn.href = cleanUrl(videoData.url);
     downloadBtn.className = 'button-neomorphism px-6 py-3 text-white font-medium flex items-center justify-center mb-4';
     downloadBtn.innerHTML = '<i class="fa fa-download mr-2"></i><span>下载无水印视频</span>';
-    
+
     container.appendChild(downloadBtn);
 }
 
@@ -376,22 +375,23 @@ function createImageGallery(container, videoData) {
     // 创建图片容器
     const imagesContainer = document.createElement('div');
     imagesContainer.id = 'images-container';
-    imagesContainer.className = 'swiper-container w-full mb-6';
-    
+    // 添加底部内边距为分页器腾出空间
+    imagesContainer.className = 'swiper-container w-full mb-6 relative pb-8';
+
     const wrapper = document.createElement('div');
     wrapper.className = 'swiper-wrapper';
-    
+
     // 添加所有图片
     videoData.images.forEach((img, index) => {
         const slide = document.createElement('div');
         slide.className = 'swiper-slide relative group';
-        
+
         const imgElement = document.createElement('img');
         imgElement.src = cleanUrl(img);
         imgElement.className = 'w-full h-96 object-cover rounded-xl';
         imgElement.loading = 'lazy';
         imgElement.onerror = "this.onerror=null;this.src='https://via.placeholder.com/800x600?text=图片加载失败'";
-        
+
         const downloadBtn = document.createElement('button');
         downloadBtn.className = 'absolute bottom-4 right-4 bg-white/80 hover:bg-white px-4 py-2 rounded-lg shadow-md transition-all opacity-0 group-hover:opacity-100';
         downloadBtn.innerHTML = '<i class="fa fa-download mr-2"></i>下载';
@@ -399,29 +399,30 @@ function createImageGallery(container, videoData) {
             const cleanedUr = cleanUrl(img);
             downloadFile(cleanedUr);
         };
-        
+
         slide.appendChild(imgElement);
         slide.appendChild(downloadBtn);
         wrapper.appendChild(slide);
     });
-    
+
     // 添加分页和导航
     const pagination = document.createElement('div');
-    pagination.className = 'swiper-pagination mt-2';
-    
+    // 添加自定义类名并移除mt-2
+    pagination.className = 'swiper-pagination gallery-pagination';
+
     const prevButton = document.createElement('div');
-    prevButton.className = 'swiper-button-prev';
-    
+    prevButton.className = 'swiper-button-prev gallery-nav-button';
+
     const nextButton = document.createElement('div');
-    nextButton.className = 'swiper-button-next';
-    
+    nextButton.className = 'swiper-button-next gallery-nav-button';
+
     imagesContainer.appendChild(wrapper);
     imagesContainer.appendChild(pagination);
     imagesContainer.appendChild(prevButton);
     imagesContainer.appendChild(nextButton);
-    
+
     container.appendChild(imagesContainer);
-    
+
     // 添加下载全部按钮
     const downloadAllBtn = document.createElement('button');
     downloadAllBtn.className = 'button-neomorphism px-6 py-3 mb-6 w-full';
@@ -432,9 +433,9 @@ function createImageGallery(container, videoData) {
             downloadFile(cleanedUrs);
         });
     };
-    
+
     container.appendChild(downloadAllBtn);
-    
+
     // 初始化Swiper
     initSwiper();
 }
@@ -445,8 +446,8 @@ function initSwiper() {
         if (typeof Swiper !== 'undefined') {
             new Swiper('.swiper-container', {
                 loop: true,
-                pagination: { el: '.swiper-pagination', clickable: true },
-                navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' }
+                pagination: {el: '.swiper-pagination', clickable: true},
+                navigation: {nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev'}
             });
         } else {
             console.error('Swiper库未加载');
@@ -472,16 +473,16 @@ function copyUrl(url, type) {
         showError(`没有可复制的${type}`);
         return;
     }
-    
+
     navigator.clipboard.writeText(url).then(() => {
         showToast(`${type}已复制到剪贴板`);
-        
+
         // 获取按钮并添加成功状态
         const btn = document.activeElement;
         if (btn && btn.id.startsWith('copy-')) {
             btn.classList.add('bg-green-500', 'text-white');
             btn.innerHTML = `<i class="fa fa-check mr-2"></i><span>复制成功</span>`;
-            
+
             setTimeout(() => {
                 btn.classList.remove('bg-green-500', 'text-white');
                 btn.innerHTML = `<i class="fa fa-link mr-2"></i><span>复制${type}</span>`;
@@ -526,16 +527,14 @@ function checkSwiper() {
 function setupDarkMode() {
     const darkModeToggle = document.getElementById('dark-mode-toggle');
     if (!darkModeToggle) return;
-    
+
     // 检查用户偏好
-    const isDarkMode = localStorage.getItem('darkMode') === 'true' || 
-                      (localStorage.getItem('darkMode') === null && 
-                       window.matchMedia('(prefers-color-scheme: dark)').matches);
-    
+    const isDarkMode = localStorage.getItem('darkMode') === 'true' || (localStorage.getItem('darkMode') === null && window.matchMedia('(prefers-color-scheme: dark)').matches);
+
     // 应用初始模式
     document.documentElement.classList.toggle('dark', isDarkMode);
     darkModeToggle.checked = isDarkMode;
-    
+
     // 监听切换事件
     darkModeToggle.addEventListener('change', () => {
         const darkMode = darkModeToggle.checked;
@@ -548,14 +547,12 @@ function setupDarkMode() {
 function setupShare() {
     const shareBtn = document.getElementById('share-btn');
     if (!shareBtn) return;
-    
+
     shareBtn.addEventListener('click', async () => {
         try {
             if (navigator.share) {
                 await navigator.share({
-                    title: '视频解析工具',
-                    text: '我用这个工具解析了一个视频，你也可以试试',
-                    url: window.location.href
+                    title: '视频解析工具', text: '我用这个工具解析了一个视频，你也可以试试', url: window.location.href
                 });
             } else {
                 // 回退方案：复制链接到剪贴板
@@ -575,7 +572,7 @@ function setupShare() {
 // 存储视频数据
 let videosjson = '';
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     setupFAQToggle();
     // 导航栏滚动效果
     const navbar = document.getElementById('navbar');
@@ -627,17 +624,36 @@ document.addEventListener('DOMContentLoaded', function() {
         parseBtn.classList.add('scale-95');
         setTimeout(() => parseBtn.classList.remove('scale-95'), 200);
 
-        const url = document.getElementById('video-url')?.value.trim() || '';
+        // 新增：URL提取函数
+        const extractUrlFromText = (text) => {
+            // 匹配HTTP/HTTPS链接的正则表达式
+            const urlPattern = /https?:\/\/[^\s]+/gi;
+            const matches = text.match(urlPattern);
+            return matches ? matches[0] : null;
+        };
 
-        if (!url) {
-            showError('请输入视频链接');
+        const rawInput = document.getElementById('video-url')?.value.trim() || '';
+
+        if (!rawInput) {
+            showError('请输入视频链接或包含链接的文本');
             return;
+        }
+
+        // 尝试从输入文本中提取URL
+        let url = extractUrlFromText(rawInput);
+
+        // 如果没有提取到URL，则使用原始输入
+        if (!url) {
+            url = rawInput;
         }
 
         if (!isValidUrl(url)) {
-            showError('请输入有效的URL');
+            showError('无法从输入中提取有效的URL');
             return;
         }
+
+        // 可选：将提取到的URL更新到输入框
+        document.getElementById('video-url').value = url;
 
         hideAllContainers();
         document.getElementById('loading-container')?.classList.remove('hidden');
@@ -649,7 +665,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const timeoutId = setTimeout(() => controller.abort(), 15000);
 
             const encodedUrl = encodeURIComponent(url);
-            const response = await fetch(`${apiUrl}?url=${encodedUrl}`, { signal });
+            const response = await fetch(`${apiUrl}?url=${encodedUrl}`, {signal});
 
             clearTimeout(timeoutId);
 
@@ -685,7 +701,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }, 100);
         }
-        
+
         // ESC 关闭结果
         if (event.key === 'Escape') {
             hideAllContainers();
@@ -695,10 +711,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 初始化暗色模式
     setupDarkMode();
-    
+
     // 初始化分享功能
     setupShare();
-    
+
     // 页面加载时检查Swiper
     checkSwiper();
 });
@@ -707,72 +723,72 @@ document.addEventListener('DOMContentLoaded', function() {
 function showResult(videoData) {
     hideAllContainers();
     const resultContainer = document.getElementById('result-container');
-    
+
     if (!resultContainer) return;
-    
+
     resultContainer.innerHTML = '';
     resultContainer.classList.remove('hidden');
-    
+
     // 显示容器动画
     resultContainer.style.cssText = 'opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease';
     setTimeout(() => {
         resultContainer.style.opacity = '1';
         resultContainer.style.transform = 'translateY(0)';
     }, 10);
-    
+
     // 创建作者信息（图片和视频模式都需要）
     const authorContainer = createAuthorContainer(videoData);
     if (authorContainer) {
         resultContainer.appendChild(authorContainer);
     }
-    
+
     // 创建视频/图片内容
     if (videoData.images && videoData.images.length > 0) {
         // 图片集处理
         createImageGallery(resultContainer, videoData);
-        
+
         // 复制按钮容器（仅图片模式）
         const copyBtnContainer = document.createElement('div');
         copyBtnContainer.className = 'flex flex-wrap gap-4 mb-6';
-        
+
         // 复制封面链接按钮
         const copyCoverBtn = document.createElement('button');
         copyCoverBtn.id = 'copy-cover-btn';
         copyCoverBtn.className = 'bg-white border border-primary text-primary hover:bg-primary/5 transition-colors rounded-lg px-6 py-3 font-medium flex items-center justify-center flex-1';
         copyCoverBtn.innerHTML = '<i class="fa fa-link mr-2"></i><span>复制封面链接</span>';
-        
+
         copyBtnContainer.appendChild(copyCoverBtn);
         resultContainer.appendChild(copyBtnContainer);
     } else {
         // 视频处理
         createVideoPlayer(resultContainer, videoData);
-        
+
         // 复制按钮容器（仅视频模式）
         const copyBtnContainer = document.createElement('div');
         copyBtnContainer.className = 'flex flex-wrap gap-4 mb-6';
-        
+
         // 复制封面链接按钮
         const copyCoverBtn = document.createElement('button');
         copyCoverBtn.id = 'copy-cover-btn';
         copyCoverBtn.className = 'bg-white border border-primary text-primary hover:bg-primary/5 transition-colors rounded-lg px-6 py-3 font-medium flex items-center justify-center flex-1';
         copyCoverBtn.innerHTML = '<i class="fa fa-link mr-2"></i><span>复制封面链接</span>';
-        
+
         // 复制视频链接按钮
         const copyUrlBtn = document.createElement('button');
         copyUrlBtn.id = 'copy-url-btn';
         copyUrlBtn.className = 'bg-white border border-primary text-primary hover:bg-primary/5 transition-colors rounded-lg px-6 py-3 font-medium flex items-center justify-center flex-1';
         copyUrlBtn.innerHTML = '<i class="fa fa-link mr-2"></i><span>复制视频链接</span>';
-        
+
         copyBtnContainer.append(copyCoverBtn, copyUrlBtn);
         resultContainer.appendChild(copyBtnContainer);
     }
-    
+
     // 创建视频信息（图片和视频模式都需要）
     const infoContainer = createInfoContainer(videoData);
     if (infoContainer) {
         resultContainer.appendChild(infoContainer);
     }
-    
+
     // 添加音乐容器（图片和视频模式都需要）
     const musicContainer = createMusicContainer(videoData);
     if (musicContainer && musicContainer.innerHTML.trim()) {
@@ -783,17 +799,17 @@ function showResult(videoData) {
 // 新增常见问题切换功能
 function setupFAQToggle() {
     document.querySelectorAll('.faq-btn').forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function () {
             const content = this.nextElementSibling;
             const icon = this.querySelector('i');
-            
+
             // 切换内容显示
             content.classList.toggle('hidden');
             content.classList.toggle('block');
-            
+
             // 旋转图标动画
             icon.classList.toggle('rotate-180');
-            
+
             // 关闭其他展开的问题
             document.querySelectorAll('.faq-btn').forEach(otherBtn => {
                 if (otherBtn !== button) {
