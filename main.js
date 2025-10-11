@@ -1,6 +1,6 @@
 /**
 *@Author: JH-Ahua
-*@CreateTime: 2025/6/12 上午12:02
+*@CreateTime: 2025/8/7 下午11:30
 *@email: admin@bugpk.com
 *@blog: www.jiuhunwl.cn
 *@Api: api.bugpk.com
@@ -42,9 +42,13 @@ function downloadFile(url) {
     const a = document.createElement('a');
     a.href = url;
     a.download = url.split('/').pop().split('?')[0];
+    a.target = '_blank'; // 防止跳转到新页面
+    a.style.display = 'none';
     document.body.appendChild(a);
     a.click();
-    document.body.removeChild(a);
+    setTimeout(() => {
+        document.body.removeChild(a);
+    }, 100);
 }
 
 // 格式化数字（添加千位分隔符）
@@ -282,32 +286,56 @@ function createMusicContainer(videoData) {
     return musicContainer;
 }
 
-// 创建作者信息容器
+// 创建作者信息容器（不存在作者信息时不显示）
 function createAuthorContainer(videoData) {
+    // 检查是否存在作者相关信息（根据实际接口字段调整判断条件）
+    // 若avatar、author等核心字段均不存在，则返回null不显示该容器
+    if (!videoData ||
+        (videoData.avatar === undefined &&
+            videoData.author === undefined &&
+            videoData.like === undefined)) {
+        return null;
+    }
+
     const authorContainer = document.createElement('div');
     authorContainer.className = 'flex items-center mb-6';
 
+    // 头像（仅在存在时显示）
     if (videoData.avatar) {
         const avatarImg = document.createElement('img');
         avatarImg.src = cleanUrl(videoData.avatar);
         avatarImg.className = 'w-12 h-12 rounded-full mr-4';
-        avatarImg.onerror = "this.onerror=null;this.src='https://via.placeholder.com/48x48?text=头像'";
+        avatarImg.onerror = function() {
+            this.onerror = null;
+            this.src = 'https://via.placeholder.com/48x48?text=头像';
+        };
         authorContainer.appendChild(avatarImg);
     }
 
     const authorInfo = document.createElement('div');
-    const authorName = document.createElement('div');
-    authorName.className = 'font-medium';
-    authorName.textContent = videoData.author || '未知作者';
 
-    const likeCount = document.createElement('div');
-    likeCount.className = 'text-sm text-gray-500';
-    likeCount.textContent = videoData.like ? `点赞 ${formatNumber(videoData.like)}` : '';
+    // 作者名称（仅在存在时显示）
+    if (videoData.author) {
+        const authorName = document.createElement('div');
+        authorName.className = 'font-medium';
+        authorName.textContent = videoData.author;
+        authorInfo.appendChild(authorName);
+    }
 
-    authorInfo.appendChild(authorName);
-    authorInfo.appendChild(likeCount);
+    // 点赞数（仅在存在且有效时显示）
+    if (videoData.like !== undefined && videoData.like !== null && videoData.like > 0) {
+        const likeCount = document.createElement('div');
+        likeCount.className = 'text-sm text-gray-500';
+        likeCount.textContent = `点赞 ${formatNumber(videoData.like)}`;
+        authorInfo.appendChild(likeCount);
+    }
+
+    // 若作者信息容器为空，则不添加到父元素
+    if (authorInfo.children.length === 0) {
+        return null;
+    }
+
     authorContainer.appendChild(authorInfo);
-
     return authorContainer;
 }
 
@@ -428,16 +456,114 @@ function createImageGallery(container, videoData) {
     downloadAllBtn.className = 'button-neomorphism px-6 py-3 mb-6 w-full';
     downloadAllBtn.innerHTML = `<i class="fa fa-images mr-2"></i>下载全部图片（${videoData.images.length}张）`;
     downloadAllBtn.onclick = () => {
-        videoData.images.forEach(img => {
-            const cleanedUrs = cleanUrl(img);  // 修改变量名避免冲突
-            downloadFile(cleanedUrs);
-        });
+        // 检查是否需要加载JSZip库
+        if (typeof JSZip === 'undefined') {
+            showToast('正在加载压缩库，请稍候...');
+            // 动态加载JSZip库
+            const script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js';
+            script.onload = () => {
+                compressAndDownloadImages(videoData.images);
+            };
+            script.onerror = () => {
+                showError('压缩库加载失败，请重试');
+            };
+            document.head.appendChild(script);
+        } else {
+            compressAndDownloadImages(videoData.images);
+        }
     };
 
     container.appendChild(downloadAllBtn);
 
     // 初始化Swiper
     initSwiper();
+}
+
+// 压缩并下载图片函数
+function compressAndDownloadImages(imageUrls) {
+    // 创建压缩对象
+    const zip = new JSZip();
+    const imageFolder = zip.folder('images');
+    let loadedCount = 0;
+    let errorCount = 0;
+    
+    showToast(`开始下载并压缩图片（${imageUrls.length}张）`);
+    
+    // 下载并添加每张图片到压缩包
+    imageUrls.forEach((imgUrl, index) => {
+        const cleanedUrl = cleanUrl(imgUrl);
+        const fileName = `image_${index + 1}.jpg`;
+        
+        // 使用fetch API获取图片数据
+        fetch(cleanedUrl)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Network response was not ok: ${response.status}`);
+                }
+                return response.blob();
+            })
+            .then(blob => {
+                // 将图片添加到压缩包
+                imageFolder.file(fileName, blob);
+                loadedCount++;
+                
+                // 所有图片都已添加到压缩包
+                if (loadedCount + errorCount === imageUrls.length) {
+                    if (loadedCount > 0) {
+                        // 生成压缩包并下载
+                        zip.generateAsync({type: 'blob'})
+                            .then(content => {
+                                // 创建下载链接
+                                const link = document.createElement('a');
+                                link.href = URL.createObjectURL(content);
+                                link.download = 'images_' + new Date().getTime() + '.zip';
+                                document.body.appendChild(link);
+                                link.click();
+                                document.body.removeChild(link);
+                                
+                                showToast(`成功压缩并下载${loadedCount}张图片`);
+                                if (errorCount > 0) {
+                                    console.warn(`${errorCount}张图片下载失败`);
+                                }
+                            })
+                            .catch(err => {
+                                showError('图片压缩失败: ' + err.message);
+                                console.error('Zip generation error:', err);
+                            });
+                    } else {
+                        showError('所有图片下载失败，请重试');
+                    }
+                }
+            })
+            .catch(err => {
+                console.error(`下载图片失败 (${index + 1}):`, err);
+                errorCount++;
+                
+                // 检查是否所有图片处理完成
+                if (loadedCount + errorCount === imageUrls.length) {
+                    if (loadedCount > 0) {
+                        // 即使有部分失败，也尝试生成压缩包
+                        zip.generateAsync({type: 'blob'})
+                            .then(content => {
+                                const link = document.createElement('a');
+                                link.href = URL.createObjectURL(content);
+                                link.download = 'images_' + new Date().getTime() + '.zip';
+                                document.body.appendChild(link);
+                                link.click();
+                                document.body.removeChild(link);
+                                
+                                showToast(`成功压缩并下载${loadedCount}张图片，${errorCount}张失败`);
+                            })
+                            .catch(zipErr => {
+                                showError('图片压缩失败: ' + zipErr.message);
+                            });
+                    } else {
+                        showError('所有图片下载失败，请重试');
+                    }
+                }
+            });
+    });
 }
 
 // 初始化Swiper插件
@@ -585,9 +711,10 @@ document.addEventListener('DOMContentLoaded', function () {
     // 平台与接口的映射关系
     const platformApiMap = {
         'all': 'https://api.bugpk.com/api/short_videos',
-        'douyin': 'https://api.bugpk.com/api/douyin.php',
-        'kuaishou': 'https://api.bugpk.com/api/kuaishou',
-        'bilibili': 'https://api.bugpk.com/api/bilibili'
+        'douyin': 'https://api.bugpk.com/api/douyin',
+        'kuaishou': 'https://api.bugpk.com/api/ksjx',
+        'bilibili': 'https://api.bugpk.com/api/bilibili',
+        'xhs': 'https://api.bugpk.com/api/xhsjx',
     };
 
     // 当前选中的平台
