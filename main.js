@@ -715,6 +715,7 @@ document.addEventListener('DOMContentLoaded', function () {
         'kuaishou': 'https://api.bugpk.com/api/ksjx',
         'bilibili': 'https://api.bugpk.com/api/bilibili',
         'xhs': 'https://api.bugpk.com/api/xhsjx',
+        'toutiao':'https://api.bugpk.com/api/toutiao',
     };
 
     // 当前选中的平台
