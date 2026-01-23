@@ -1,6 +1,6 @@
 /**
  *@Author: JH-Ahua
- *@CreateTime: 2025/8/7 下午11:30
+ *@CreateTime: 2026/1/15 下午15:37
  *@email: admin@bugpk.com
  *@blog: www.jiuhunwl.cn
  *@Api: api.bugpk.com
@@ -72,6 +72,10 @@ function formatNumber(num) {
 // 获取代理播放地址
 function getProxyVideoUrl(url) {
     if (!url) return '';
+    // 只有抖音请求才使用代理
+    if (!isDouyinRequest) {
+        return cleanUrl(url);
+    }
     try {
         const cleanedUrl = cleanUrl(url);
         // 使用 btoa 进行 base64 编码
@@ -173,15 +177,7 @@ function updateVideoPreview(previewVideo, videoPlaceholder, videoCover, videoDat
     previewVideo.src = '';
     videoCover.src = '';
 
-    // 处理封面
-    if (videoData.cover) {
-        videoCover.src = cleanUrl(videoData.cover);
-        videoCover.classList.remove('hidden');
-        videoPlaceholder.classList.add('hidden');
-    } else {
-        videoCover.classList.add('hidden');
-        videoPlaceholder.classList.remove('hidden');
-    }
+    const coverUrl = cleanUrl(videoData.cover || videoData.coverUrl);
 
     // 处理视频
     if (videoData.url) {
@@ -189,18 +185,24 @@ function updateVideoPreview(previewVideo, videoPlaceholder, videoCover, videoDat
         previewVideo.src = getProxyVideoUrl(videoData.url);
         previewVideo.classList.remove('hidden');
         videoPlaceholder.classList.add('hidden');
+        
+        // 视频模式下，隐藏独立的封面图片，使用视频海报
+        videoCover.classList.add('hidden');
 
-        if (videoData.coverUrl) {
-            previewVideo.poster = cleanUrl(videoData.coverUrl);
+        if (coverUrl) {
+            previewVideo.poster = coverUrl;
         }
     } else {
+        // 非视频模式（或无视频链接）
         previewVideo.classList.add('hidden');
 
-        if (videoData.coverUrl) {
-            videoCover.src = cleanUrl(videoData.coverUrl);
+        if (coverUrl) {
+            videoCover.src = coverUrl;
             videoCover.classList.remove('hidden');
+            videoPlaceholder.classList.add('hidden');
         } else {
             videoCover.classList.add('hidden');
+            videoPlaceholder.classList.remove('hidden');
         }
     }
 }
@@ -761,6 +763,8 @@ function setupShare() {
 
 // 存储视频数据
 let videosjson = '';
+// 标记当前是否为抖音请求
+let isDouyinRequest = false;
 
 document.addEventListener('DOMContentLoaded', function () {
     setupFAQToggle();
@@ -838,6 +842,9 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!url) {
             url = rawInput;
         }
+
+        // 判断是否为抖音链接 (根据用户输入的URL判断)
+        isDouyinRequest = /douyin\.com/i.test(url) || /iesdouyin\.com/i.test(url);
 
         if (!isValidUrl(url)) {
             showError('无法从输入中提取有效的URL');
