@@ -1,10 +1,10 @@
 /**
  *@Author: JH-Ahua
- *@CreateTime: 2025/8/7 下午11:30
+ *@CreateTime: 2026/5/2 21:32
  *@email: admin@bugpk.com
  *@blog: www.jiuhunwl.cn
  *@Api: api.bugpk.com
- *@tip: 短视频解析（页面数据与 UI 模块化）
+ *@tip: 短视频解析前端
  */
 (function () {
     'use strict';
