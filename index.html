@@ -11,362 +11,278 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="referrer" content="never">
-    <title>短视频解析工具 | 一键解析各大平台视频</title>
+    <meta name="referrer" content="no-referrer">
+    <title>BK-SV短视频去水印解析工具 | 一键解析各大平台视频</title>
+    <link rel="icon" href="https://static.eo.ifphp.com/img/BugPk-api.png">
+    <meta name="description" content="短视频图集去水印工具，支持各大平台。">
+    <meta name="keywords" content="图集解析,图集去水印,短视频解析,短视频去水印,抖音解析,抖音短视频解析,抖音图集解析,抖音去水印,抖音短视频去水印,抖音图集去水印,快手解析,快手短视频解析,快手图集解析,快手去水印,快手短视频去水印,快图集手去水印,小红书解析,小红书短视频解析,小红书图集解析,小红书去水印,小红书短视频去水印,小红书图集去水印,皮皮虾解析,皮皮虾短视频解析,皮皮虾图集解析,皮皮虾去水印,皮皮虾短视频去水印,皮皮虾图集去水印,皮皮搞笑解析,皮皮搞笑短视频解析,皮皮搞笑图集解析,皮皮搞笑去水印,皮皮搞笑短视频去水印,皮皮搞笑图集去水印">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://static.eo.ifphp.com/css/inter.min.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- 替换原有的JS引用 -->
-    <script src="main.js?v=20260123"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
-    <!-- 新增Swiper依赖 -->
-    <link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css">
-    <script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script>
+    <script defer src="main.js?v=20260426"></script>
+    <link href="https://static.eo.ifphp.com/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://static.eo.ifphp.com/css/swiper-bundle.min.css">
+    <link href="https://static.eo.ifphp.com/css/weather.css" rel="stylesheet">
+    <script src="https://static.eo.ifphp.com/js/swiper-bundle.min.js"></script>
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
                         primary: '#4F46E5',
                         secondary: '#7C3AED',
                         accent: '#EC4899',
-                        dark: '#1F2937',
-                        light: '#F9FAFB'
+                        dark: '#0f172a',
+                        muted: '#64748b',
                     },
                     fontFamily: {
                         inter: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'glow': '0 0 40px -10px rgba(79, 70, 229, 0.35)',
+                        'card': '0 4px 6px -1px rgba(15, 23, 42, 0.06), 0 20px 40px -12px rgba(79, 70, 229, 0.12)',
                     },
                 }
             }
         }
     </script>
     <style type="text/tailwindcss">
+        :root {
+            --surface: rgba(255, 255, 255, 0.72);
+            --surface-border: rgba(255, 255, 255, 0.55);
+            --mesh-1: rgba(79, 70, 229, 0.12);
+            --mesh-2: rgba(236, 72, 153, 0.1);
+            --mesh-3: rgba(124, 58, 237, 0.1);
+        }
         @layer utilities {
-            .content-auto {
-                content-visibility: auto;
+            .mesh-bg {
+                background-color: #f8fafc;
+                background-image:
+                        radial-gradient(ellipse 80% 50% at 20% -10%, var(--mesh-1), transparent),
+                        radial-gradient(ellipse 60% 40% at 100% 0%, var(--mesh-2), transparent),
+                        radial-gradient(ellipse 50% 60% at 50% 100%, var(--mesh-3), transparent);
             }
-
-            .text-shadow {
-                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            .glass-header {
+                background: rgba(255, 255, 255, 0.75);
+                backdrop-filter: blur(16px);
+                -webkit-backdrop-filter: blur(16px);
+                border-bottom: 1px solid rgba(15, 23, 42, 0.06);
             }
-
-            .bg-gradient-random {
-                background-size: 200% 200%;
-                animation: gradientShift 15s ease infinite;
+            .surface-card {
+                background: var(--surface);
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+                border: 1px solid var(--surface-border);
+                box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.05), 0 24px 48px -12px rgba(79, 70, 229, 0.15);
             }
-
-            .card-neomorphism {
-                border-radius: 20px;
-                background: linear-gradient(145deg, #f0f0f0, #ffffff);
-                box-shadow: 20px 20px 60px #d9d9d9,
-                -20px -20px 60px #ffffff;
-                transition: all 0.3s ease;
-            }
-
-            .card-neomorphism:hover {
-                transform: translateY(-5px);
-                box-shadow: 25px 25px 60px #d9d9d9,
-                -25px -25px 60px #ffffff;
-            }
-
-            .input-neomorphism {
-                border-radius: 10px;
-                background: #ffffff;
-                box-shadow: inset 5px 5px 10px #d9d9d9,
-                inset -5px -5px 10px #ffffff;
-                border: none;
-                outline: none;
-            }
-
-            .button-neomorphism {
-                border-radius: 10px;
-                background: linear-gradient(145deg, #4F46E5, #4338CA);
-                box-shadow: 5px 5px 10px #3a31a8,
-                -5px -5px 10px #645bff;
-                transition: all 0.3s ease;
-            }
-
-            .button-neomorphism:hover {
-                transform: translateY(-2px);
-                box-shadow: 7px 7px 14px #3a31a8,
-                -7px -7px 14px #645bff;
-            }
-
-            .button-neomorphism:active {
-                transform: translateY(1px);
-                box-shadow: 3px 3px 6px #3a31a8,
-                -3px -3px 6px #645bff;
-            }
-
-            .glass-effect {
-                background: rgba(255, 255, 255, 0.25);
-                backdrop-filter: blur(10px);
-                -webkit-backdrop-filter: blur(10px);
-                border: 1px solid rgba(255, 255, 255, 0.18);
-            }
-
-            .animate-float {
-                animation: float 6s ease-in-out infinite;
-            }
-
-            .animate-pulse-slow {
-                animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-            }
-
-            .scrollbar-hide::-webkit-scrollbar {
-                display: none;
-            }
-
-            .scrollbar-hide {
-                -ms-overflow-style: none;
-                scrollbar-width: none;
-            }
-
             .text-gradient {
                 background-clip: text;
                 -webkit-background-clip: text;
                 color: transparent;
             }
+            .scrollbar-hide::-webkit-scrollbar { display: none; }
+            .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
         }
-
         @keyframes gradientShift {
-            0% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-            100% {
-                background-position: 0% 50%;
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        .bg-gradient-animated {
+            background: linear-gradient(120deg, #eef2ff 0%, #faf5ff 40%, #fce7f3 100%);
+            background-size: 200% 200%;
+            animation: gradientShift 18s ease infinite;
+        }
+        /* 父级 text-gradient 会让子元素继承 color:transparent；单独给强调字上色，避免与浅色底融在一起 */
+        .hero-emphasis {
+            color: #3730a3;
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 45%, #db2777 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: none;
+            filter: drop-shadow(0 1px 1px rgba(255, 255, 255, 0.85));
+        }
+        @supports not (-webkit-background-clip: text) {
+            .hero-emphasis {
+                color: #4f46e5;
+                -webkit-text-fill-color: unset;
+                background: none;
+                filter: none;
+                text-shadow: 0 0 1px #fff, 0 1px 2px rgba(15, 23, 42, 0.12);
             }
         }
-
-        @keyframes float {
-            0% {
-                transform: translateY(0px);
-            }
-            50% {
-                transform: translateY(-15px);
-            }
-            100% {
-                transform: translateY(0px);
-            }
+        .platform-btn {
+            border-radius: 9999px;
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: background-color 0.2s, color 0.2s, box-shadow 0.2s, transform 0.15s;
         }
-
-        .rotate-180 {
-            transform: rotate(180deg);
-            transition: transform 0.3s ease;
+        .platform-btn.active {
+            background-color: #4F46E5;
+            color: #fff;
+            box-shadow: 0 0 40px -10px rgba(79, 70, 229, 0.35), 0 0 0 2px rgba(79, 70, 229, 0.25);
         }
-
-        /* 新增移动菜单动画 */
-        #mobile-menu {
-            transition: all 0.3s ease;
-            opacity: 0;
-            transform: translateY(-10px);
+        .platform-btn:not(.active) {
+            background-color: rgba(241, 245, 249, 0.95);
+            color: #475569;
         }
-
-        #mobile-menu:not(.hidden) {
-            opacity: 1;
-            transform: translateY(0);
+        .platform-btn:not(.active):hover {
+            background-color: rgba(226, 232, 240, 0.95);
+            color: #1e293b;
         }
-
-        /* 图片画廊导航按钮样式 */
+        #mobile-menu { transition: opacity 0.25s ease, transform 0.25s ease; }
+        #mobile-menu:not(.hidden) { opacity: 1; transform: translateY(0); }
+        #mobile-menu.hidden { opacity: 0; transform: translateY(-8px); pointer-events: none; }
         .gallery-nav-button {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
             z-index: 10;
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(15, 23, 42, 0.45);
             width: 40px;
             height: 40px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
+            color: #fff;
         }
-
-        /* 分页器样式调整 */
-        .gallery-pagination {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            text-align: center;
-        }
-
-        /* 调整分页器小点样式 */
+        .gallery-pagination { position: absolute; bottom: 0; left: 0; width: 100%; text-align: center; }
         .gallery-pagination .swiper-pagination-bullet {
             margin: 0 4px;
-            background: rgba(255, 255, 255, 0.7);
+            background: rgba(255, 255, 255, 0.65);
             width: 8px;
             height: 8px;
         }
-
         .gallery-pagination .swiper-pagination-bullet-active {
-            background: #ffffff;
+            background: #fff;
             transform: scale(1.2);
         }
-
-        /* 调整下载按钮z-index确保在导航按钮之上 */
-        .swiper-slide .button-neomorphism {
-            z-index: 20;
+        .btn-primary-gradient {
+            border-radius: 14px;
+            background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 50%, #6366f1 100%);
+            box-shadow: 0 4px 14px -3px rgba(79, 70, 229, 0.55);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
+        .btn-primary-gradient:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px -4px rgba(79, 70, 229, 0.45);
+        }
+        .btn-primary-gradient:active { transform: translateY(0); }
+        .input-soft {
+            border-radius: 14px;
+            background: #f8fafc;
+            border: 1px solid rgba(15, 23, 42, 0.08);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .input-soft:focus {
+            outline: none;
+            border-color: rgba(79, 70, 229, 0.45);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+        }
+        .rotate-180 { transform: rotate(180deg); transition: transform 0.3s ease; }
+        .swiper-slide .btn-primary-gradient { z-index: 20; }
     </style>
+    <script defer src="https://tj.ifphp.com/script.js" data-website-id="0bb3ba45-fffd-4194-86a4-b3b43c896fae"></script>
 </head>
-<body class="min-h-screen bg-gradient-random font-inter text-dark overflow-x-hidden">
-<!-- 背景装饰元素 -->
-<div class="fixed inset-0 -z-10 overflow-hidden">
-    <div class="absolute top-20 left-20 w-64 h-64 rounded-full bg-primary/20 blur-3xl animate-pulse-slow"></div>
-    <div class="absolute bottom-20 right-20 w-80 h-80 rounded-full bg-accent/20 blur-3xl animate-pulse-slow"
-         style="animation-delay: 2s;"></div>
-    <div class="absolute top-1/2 left-1/4 w-72 h-72 rounded-full bg-secondary/20 blur-3xl animate-pulse-slow"
-         style="animation-delay: 4s;"></div>
+<body class="min-h-screen mesh-bg font-inter text-slate-800 antialiased overflow-x-hidden bg-gradient-animated">
+<div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none" aria-hidden="true">
+    <div class="absolute top-24 left-[10%] w-72 h-72 rounded-full bg-primary/15 blur-3xl"></div>
+    <div class="absolute bottom-20 right-[8%] w-96 h-96 rounded-full bg-accent/15 blur-3xl"></div>
+    <div class="absolute top-1/2 left-1/3 w-80 h-80 rounded-full bg-secondary/10 blur-3xl"></div>
 </div>
 
-<!-- 顶部导航 -->
-<header class="glass-effect fixed top-0 left-0 right-0 z-50 transition-all duration-300" id="navbar">
-    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-        <div class="flex items-center space-x-2">
-            <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white shadow-lg">
-                <i class="fa fa-play-circle text-xl"></i>
+<header class="glass-header fixed top-0 left-0 right-0 z-50 transition-all duration-300 py-4" id="navbar">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 flex justify-between items-center">
+        <a href="/" class="flex items-center gap-3 group">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white shadow-glow group-hover:scale-105 transition-transform">
+                <i class="fa fa-play-circle text-lg" aria-hidden="true"></i>
             </div>
-            <h1 class="text-xl font-bold text-gradient bg-gradient-to-r from-primary via-secondary to-accent">
-                短视频解析工具</h1>
-        </div>
-        <nav class="hidden md:flex items-center space-x-8">
-            <a href="#" class="text-dark/80 hover:text-primary transition-colors font-medium">首页</a>
-            <a href="#" class="text-dark/80 hover:text-primary transition-colors font-medium">解析教程</a>
-            <a href="#" class="text-dark/80 hover:text-primary transition-colors font-medium">支持平台</a>
-            <a href="#" class="text-dark/80 hover:text-primary transition-colors font-medium">关于我们</a>
-        </nav>
-        <div class="md:hidden">
-            <button id="menu-toggle" class="text-dark hover:text-primary transition-colors">
-                <i class="fa fa-bars text-xl"></i>
-            </button>
-        </div>
+            <div>
+                <span class="text-lg font-bold text-gradient bg-gradient-to-r from-primary via-secondary to-accent leading-tight block">短视频解析</span>
+                <span class="text-[11px] text-slate-500 font-medium tracking-wide uppercase">无水印 · 免费</span>
+            </div>
+        </a>
+        <nav id="nav-desktop" class="hidden md:flex items-center gap-8 text-sm font-medium" aria-label="主导航"></nav>
+        <button type="button" id="menu-toggle" class="md:hidden p-2 rounded-lg text-slate-700 hover:bg-slate-100 transition-colors" aria-expanded="false" aria-controls="mobile-menu" aria-label="打开菜单">
+            <i class="fa fa-bars text-xl" aria-hidden="true"></i>
+        </button>
     </div>
-    <!-- 移动端菜单 -->
-    <div id="mobile-menu" class="hidden md:hidden bg-white shadow-lg absolute top-full left-0 right-0">
-        <div class="container mx-auto px-4 py-4 flex flex-col space-y-4">
-            <a href="#"
-               class="text-dark/80 hover:text-primary transition-colors font-medium py-2 border-b border-gray-100">首页</a>
-            <a href="#"
-               class="text-dark/80 hover:text-primary transition-colors font-medium py-2 border-b border-gray-100">解析教程</a>
-            <a href="#"
-               class="text-dark/80 hover:text-primary transition-colors font-medium py-2 border-b border-gray-100">支持平台</a>
-            <a href="#" class="text-dark/80 hover:text-primary transition-colors font-medium py-2">关于我们</a>
-        </div>
+    <div id="mobile-menu" class="hidden md:hidden absolute top-full left-0 right-0 glass-header border-b border-slate-200/80 shadow-card" role="dialog" aria-label="移动端菜单">
+        <nav id="nav-mobile" class="max-w-6xl mx-auto px-4 py-4 flex flex-col gap-1" aria-label="移动端导航"></nav>
     </div>
 </header>
 
-<!-- 主要内容 -->
-<main class="container mx-auto px-4 pt-32 pb-16">
-    <!-- 英雄区域 -->
-    <section class="mb-20 text-center">
-        <h2 class="text-[clamp(2rem,5vw,3.5rem)] font-bold mb-6 text-gradient bg-gradient-to-r from-primary via-secondary to-accent">
-            轻松解析<span class="text-shadow">任何</span>短视频
+<main class="max-w-6xl mx-auto px-4 sm:px-6 pt-28 sm:pt-32 pb-20">
+    <section class="mb-16 sm:mb-20 text-center" aria-labelledby="hero-title">
+        <p class="text-primary font-semibold text-sm tracking-widest uppercase mb-3">BK-SV · 多平台解析</p>
+        <h2 id="hero-title" class="text-[clamp(1.75rem,5vw,3.25rem)] font-extrabold leading-tight mb-5 text-gradient bg-gradient-to-r from-primary via-secondary to-accent">
+            轻松解析<span class="hero-emphasis">任何</span>短视频
         </h2>
-        <p class="text-[clamp(1rem,2vw,1.25rem)] text-dark/70 max-w-3xl mx-auto mb-10">
-            从抖音、快手、B站等各大平台一键解析无水印视频，简单易用，完全免费
+        <p class="text-slate-600 text-[clamp(0.95rem,2vw,1.15rem)] max-w-2xl mx-auto mb-10 leading-relaxed">
+            支持抖音、快手、B 站、小红书等平台，一键提取无水印视频与图集，简单免费。
         </p>
-        <div class="flex flex-wrap justify-center gap-4 mb-12">
-            <div class="bg-white/80 rounded-full px-6 py-3 shadow-lg flex items-center">
-                <i class="fa fa-check-circle text-green-500 mr-2"></i>
-                <span class="font-medium">无水印</span>
-            </div>
-            <div class="bg-white/80 rounded-full px-6 py-3 shadow-lg flex items-center">
-                <i class="fa fa-check-circle text-green-500 mr-2"></i>
-                <span class="font-medium">高速解析</span>
-            </div>
-            <div class="bg-white/80 rounded-full px-6 py-3 shadow-lg flex items-center">
-                <i class="fa fa-check-circle text-green-500 mr-2"></i>
-                <span class="font-medium">完全免费</span>
-            </div>
-        </div>
+        <div id="hero-features" class="flex flex-wrap justify-center gap-3 mb-4" role="list"></div>
     </section>
 
-    <!-- 解析卡片 -->
-    <section class="max-w-3xl mx-auto mb-20">
-        <div class="card-neomorphism p-8 relative overflow-hidden">
-            <!-- 渐变装饰条 -->
-            <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-secondary to-accent"></div>
-
-            <!-- 平台选择 -->
-            <div class="flex flex-wrap gap-3 mb-6">
-                <button class="platform-btn active px-4 py-2 rounded-full text-sm font-medium transition-all duration-300"
-                        data-platform="all">
-                    <i class="fa fa-globe mr-1"></i> 所有平台
-                </button>
-                <button class="platform-btn px-4 py-2 rounded-full text-sm font-medium transition-all duration-300"
-                        data-platform="douyin">
-                    <i class="fa fa-music mr-1"></i> 抖音
-                </button>
-                <button class="platform-btn px-4 py-2 rounded-full text-sm font-medium transition-all duration-300"
-                        data-platform="kuaishou">
-                    <i class="fa fa-bolt mr-1"></i> 快手
-                </button>
-                <button class="platform-btn px-4 py-2 rounded-full text-sm font-medium transition-all duration-300"
-                        data-platform="bilibili">
-                    <i class="fa fa-play-circle mr-1"></i> B站
-                </button>
-                <button class="platform-btn px-4 py-2 rounded-full text-sm font-medium transition-all duration-300"
-                        data-platform="toutiao">
-                    <i class="fa fa-bookmark mr-1" style="color: #FE2C55;"></i> 今日头条
-                </button>
-            </div>
-
-            <!-- 输入区域 -->
+    <section class="max-w-3xl mx-auto mb-20" aria-label="解析工具">
+        <div class="surface-card rounded-3xl p-6 sm:p-8 relative overflow-hidden">
+            <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-secondary to-accent rounded-t-3xl" aria-hidden="true"></div>
+            <div id="platform-tabs" class="flex flex-wrap gap-2 sm:gap-3 mb-6" role="tablist" aria-label="选择平台接口"></div>
             <div class="relative mb-6">
-                <input type="text" id="video-url"
-                       class="input-neomorphism w-full py-4 px-5 pr-12 text-lg placeholder-gray-400"
-                       placeholder="请粘贴视频链接...">
-                <button id="clear-btn"
-                        class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors">
-                    <i class="fa fa-times-circle"></i>
+                <label for="video-url" class="sr-only">视频链接</label>
+                <input type="text" id="video-url" autocomplete="off"
+                       class="input-soft w-full py-4 pl-5 pr-12 text-base sm:text-lg placeholder-slate-400 text-slate-800"
+                       placeholder="粘贴分享链接或含链接的文本…">
+                <button type="button" id="clear-btn"
+                        class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors p-1 rounded-lg hover:bg-slate-100"
+                        aria-label="清空输入">
+                    <i class="fa fa-times-circle text-lg" aria-hidden="true"></i>
                 </button>
             </div>
-
-            <!-- 解析按钮 -->
-            <button id="parse-btn"
-                    class="button-neomorphism w-full py-4 text-white font-bold text-lg flex items-center justify-center">
-                <i class="fa fa-magic mr-2"></i>
+            <button type="button" id="parse-btn"
+                    class="btn-primary-gradient w-full py-4 text-white font-bold text-base sm:text-lg flex items-center justify-center gap-2">
+                <i class="fa fa-magic" aria-hidden="true"></i>
                 <span>开始解析</span>
-                <div id="parse-loader" class="hidden ml-2">
-                    <i class="fa fa-spinner fa-spin"></i>
-                </div>
+                <span id="parse-loader" class="hidden" aria-hidden="true"><i class="fa fa-spinner fa-spin"></i></span>
             </button>
 
-            <!-- 结果容器（仅保留空壳，内容由JS动态生成） -->
             <div id="result-container" class="mt-8 hidden">
-                <div class="border-t border-gray-100 pt-6">
-                    <h3 class="text-lg font-semibold mb-4">解析结果</h3>
-                    <!-- 视频预览容器（保留必要占位元素） -->
-                    <div class="rounded-xl overflow-hidden mb-6 shadow-lg">
-                        <div id="video-placeholder" class="w-full h-64 bg-gray-100 flex items-center justify-center">
-                            <i class="fa fa-film text-5xl text-gray-300"></i>
+                <div class="border-t border-slate-200/80 pt-6">
+                    <h3 class="text-lg font-semibold text-slate-800 mb-4">解析结果</h3>
+                    <div class="mb-4 inline-flex items-center gap-2 rounded-full bg-emerald-50 text-emerald-700 px-3 py-1 text-xs font-medium border border-emerald-100">
+                        <i class="fa fa-link" aria-hidden="true"></i>
+                        <span>当前使用源链接直连播放与下载</span>
+                    </div>
+                    <div class="rounded-2xl overflow-hidden mb-6 shadow-card border border-slate-100/80">
+                        <div id="video-placeholder" class="w-full min-h-[14rem] bg-slate-100 flex items-center justify-center">
+                            <i class="fa fa-film text-5xl text-slate-300" aria-hidden="true"></i>
                         </div>
-                        <video id="preview-video" class="w-full hidden" controls></video>
+                        <video id="preview-video" class="w-full hidden bg-black" controls playsinline></video>
                         <img id="video-cover" class="w-full hidden" alt="视频封面">
                     </div>
                 </div>
             </div>
 
-            <!-- 加载状态 -->
             <div id="loading-container" class="mt-8 hidden">
-                <div class="border-t border-gray-100 pt-6 flex flex-col items-center">
-                    <div class="w-16 h-16 border-4 border-primary/30 border-t-primary rounded-full animate-spin mb-4"></div>
-                    <p class="text-lg font-medium">正在解析视频...</p>
-                    <p class="text-sm text-gray-500 mt-2">请稍候，这可能需要几秒钟时间</p>
+                <div class="border-t border-slate-200/80 pt-8 flex flex-col items-center text-center">
+                    <div class="w-14 h-14 border-[3px] border-primary/25 border-t-primary rounded-full animate-spin mb-4" role="status" aria-label="加载中"></div>
+                    <p class="text-lg font-semibold text-slate-800">正在解析…</p>
+                    <p class="text-sm text-slate-500 mt-2 max-w-xs">通常几秒内完成，请稍候</p>
                 </div>
             </div>
 
-            <!-- 错误提示 -->
             <div id="error-container" class="mt-8 hidden">
-                <div class="border-t border-gray-100 pt-6">
-                    <div class="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start cursor-pointer"
-                         onclick="this.classList.add('hidden')">
-                        <i class="fa fa-exclamation-triangle text-red-500 mt-1 mr-3 text-xl"></i>
+                <div class="border-t border-slate-200/80 pt-6">
+                    <div class="rounded-2xl bg-red-50 border border-red-200/80 p-4 flex gap-3 cursor-pointer hover:bg-red-50/90 transition-colors"
+                         role="alert" data-dismiss-error>
+                        <i class="fa fa-circle-exclamation text-red-500 mt-0.5 text-xl shrink-0" aria-hidden="true"></i>
                         <div>
-                            <h4 class="font-medium text-red-800 mb-1">解析失败</h4>
-                            <p id="error-message" class="text-sm text-red-600"></p>
+                            <h4 class="font-semibold text-red-900 mb-1">解析失败</h4>
+                            <p id="error-message" class="text-sm text-red-700 leading-relaxed"></p>
                         </div>
                     </div>
                 </div>
@@ -374,325 +290,80 @@
         </div>
     </section>
 
-    <!-- 平台支持 -->
-    <section class="max-w-5xl mx-auto mb-20">
-        <h3 class="text-2xl font-bold text-center mb-12">支持的平台</h3>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <!-- 抖音 -->
-            <div class="card-neomorphism p-6 text-center transform hover:scale-105 transition-transform duration-300">
-                <a href="https://www.douyin.com" target="_blank" class="block">
-                    <div class="w-16 h-16 rounded-full bg-gradient-to-br from-black to-gray-800 flex items-center justify-center mx-auto mb-4">
-                        <img src="https://lf-douyin-pc-web.douyinstatic.com/obj/douyin-pc-web/2025_0313_logo.png"
-                             alt="抖音图标"
-                             class="w-8 h-8 object-contain rounded-full">
-                    </div>
-                </a>
-                <h4 class="font-bold mb-2">抖音</h4>
-                <p class="text-sm text-gray-600">解析抖音无水印视频</p>
-            </div>
-
-            <!-- 快手 -->
-            <div class="card-neomorphism p-6 text-center transform hover:scale-105 transition-transform duration-300">
-                <a href="https://www.kuaishou.com" target="_blank" class="block">
-                    <div class="w-16 h-16 rounded-full bg-gradient-to-br from-red-500 to-yellow-500 flex items-center justify-center mx-auto mb-4">
-                        <img src="https://p4-plat.wskwai.com/kos/nlav111422/ks-web/favicon.ico"
-                             alt="快手图标"
-                             class="w-8 h-8 object-contain rounded-full">
-                    </div>
-                </a>
-                <h4 class="font-bold mb-2">快手</h4>
-                <p class="text-sm text-gray-600">解析快手无水印视频</p>
-            </div>
-
-            <!-- B站 -->
-            <div class="card-neomorphism p-6 text-center transform hover:scale-105 transition-transform duration-300">
-                <a href="https://www.bilibili.com" target="_blank" class="block">
-                    <div class="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center mx-auto mb-4">
-                        <img src="https://www.bilibili.com/favicon.ico"
-                             alt="B站图标"
-                             class="w-8 h-8 object-contain rounded-full">
-                    </div>
-                </a>
-                <h4 class="font-bold mb-2">B站</h4>
-                <p class="text-sm text-gray-600">解析B站视频</p>
-            </div>
-
-            <!-- 小红书 -->
-            <div class="card-neomorphism p-6 text-center transform hover:scale-105 transition-transform duration-300">
-                <a href="https://www.xiaohongshu.com" target="_blank" class="block">
-                    <div class="w-16 h-16 rounded-full bg-gradient-to-br from-pink-500 to-red-500 flex items-center justify-center mx-auto mb-4">
-                        <img src="https://www.xiaohongshu.com/favicon.ico"
-                             alt="小红书图标"
-                             class="w-8 h-8 object-contain rounded-full">
-                    </div>
-                </a>
-                <h4 class="font-bold mb-2">小红书</h4>
-                <p class="text-sm text-gray-600">解析小红书视频</p>
-            </div>
-            <!-- 微博 -->
-            <div class="card-neomorphism p-6 text-center transform hover:scale-105 transition-transform duration-300">
-                <a href="https://weibo.com" target="_blank" class="block">
-                    <div class="w-16 h-16 rounded-full bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center mx-auto mb-4">
-                        <img src="https://isee.weishi.qq.com/favicon.ico"
-                             alt="微博图标"
-                             class="w-8 h-8 object-contain rounded-full">
-                    </div>
-                </a>
-                <h4 class="font-bold mb-2">微博</h4>
-                <p class="text-sm text-gray-600">解析微博短视频</p>
-            </div>
-
-            <!-- 微视 -->
-            <div class="card-neomorphism p-6 text-center transform hover:scale-105 transition-transform duration-300">
-                <a href="https://weishi.qq.com" target="_blank" class="block">
-                    <div class="w-16 h-16 rounded-full bg-gradient-to-br from-blue-600 to-cyan-500 flex items-center justify-center mx-auto mb-4">
-                        <img src="https://isee.weishi.qq.com/favicon.ico"
-                             alt="微视图标"
-                             class="w-8 h-8 object-contain rounded-full">
-                    </div>
-                </a>
-                <h4 class="font-bold mb-2">微视</h4>
-                <p class="text-sm text-gray-600">解析微视短视频</p>
-            </div>
-
-            <!-- 皮皮虾 -->
-            <div class="card-neomorphism p-6 text-center transform hover:scale-105 transition-transform duration-300">
-                <a href="https://www.pipix.com" target="_blank" class="block">
-                    <div class="w-16 h-16 rounded-full bg-gradient-to-br from-purple-600 to-pink-500 flex items-center justify-center mx-auto mb-4">
-                        <img src="https://lf-toutiao-ug-dns.toutiaocdn.com/obj/toutiao-ug-tos/ppx/mp/static/media/favicon.9cfbabbf.ico"
-                             alt="皮皮虾图标"
-                             class="w-8 h-8 object-contain rounded-full">
-                    </div>
-                </a>
-                <h4 class="font-bold mb-2">皮皮虾</h4>
-                <p class="text-sm text-gray-600">解析皮皮虾视频</p>
-            </div>
-
-            <!-- 皮皮搞笑 -->
-            <div class="card-neomorphism p-6 text-center transform hover:scale-105 transition-transform duration-300">
-                <a href="https://www.pipigx.com" target="_blank" class="block">
-                    <div class="w-16 h-16 rounded-full bg-gradient-to-br from-green-600 to-lime-500 flex items-center justify-center mx-auto mb-4">
-                        <img src="https://www.pipigx.com/favicon.ico"
-                             alt="皮皮搞笑图标"
-                             class="w-8 h-8 object-contain rounded-full">
-                    </div>
-                </a>
-                <h4 class="font-bold mb-2">皮皮搞笑</h4>
-                <p class="text-sm text-gray-600">解析搞笑短视频</p>
-            </div>
-
-            <!-- 西瓜视频 -->
-            <div class="card-neomorphism p-6 text-center transform hover:scale-105 transition-transform duration-300">
-                <a href="https://www.ixigua.com" target="_blank" class="block">
-                    <div class="w-16 h-16 rounded-full bg-gradient-to-br from-green-600 to-emerald-500 flex items-center justify-center mx-auto mb-4">
-                        <img src="https://www.ixigua.com/favicon.ico"
-                             alt="西瓜视频图标"
-                             class="w-8 h-8 object-contain rounded-full">
-                    </div>
-                </a>
-                <h4 class="font-bold mb-2">西瓜视频</h4>
-                <p class="text-sm text-gray-600">解析西瓜短视频</p>
-            </div>
-
-            <!-- 好看视频 -->
-            <div class="card-neomorphism p-6 text-center transform hover:scale-105 transition-transform duration-300">
-                <a href="https://haokan.baidu.com" target="_blank" class="block">
-                    <div class="w-16 h-16 rounded-full bg-gradient-to-br from-blue-800 to-sky-500 flex items-center justify-center mx-auto mb-4">
-                        <img src="https://haokan.baidu.com/favicon.ico"
-                             alt="好看视频图标"
-                             class="w-8 h-8 object-contain rounded-full">
-                    </div>
-                </a>
-                <h4 class="font-bold mb-2">好看视频</h4>
-                <p class="text-sm text-gray-600">解析百度系短视频</p>
-            </div>
-
-            <!-- 最右 -->
-            <div class="card-neomorphism p-6 text-center transform hover:scale-105 transition-transform duration-300">
-                <a href="https://www.izuiyou.com" target="_blank" class="block">
-                    <div class="w-16 h-16 rounded-full bg-gradient-to-br from-purple-800 to-fuchsia-500 flex items-center justify-center mx-auto mb-4">
-                        <img src="https://www.izuiyou.com/favicon.ico"
-                             alt="最右图标"
-                             class="w-8 h-8 object-contain rounded-full">
-                    </div>
-                </a>
-                <h4 class="font-bold mb-2">最右</h4>
-                <p class="text-sm text-gray-600">解析最右短视频</p>
-            </div>
-
-            <!-- 火山小视频 -->
-            <div class="card-neomorphism p-6 text-center transform hover:scale-105 transition-transform duration-300">
-                <a href="https://www.huoshan.com" target="_blank" class="block">
-                    <div class="w-16 h-16 rounded-full bg-gradient-to-br from-orange-800 to-amber-500 flex items-center justify-center mx-auto mb-4">
-                        <img src="https://ts2.tc.mm.bing.net/th/id/OIP-C.2cd9iteRihWjnuVflgiqQQHaD4?w=80&h=80&c=1&bgcl=d8f879&r=0&o=6&dpr=1.5&pid=ImgRC"
-                             alt="火山图标"
-                             class="w-8 h-8 object-contain rounded-full">
-                    </div>
-                </a>
-                <h4 class="font-bold mb-2">火山小视频</h4>
-                <p class="text-sm text-gray-600">解析火山平台视频</p>
-            </div>
-            <!-- 更多平台 -->
-            <div class="card-neomorphism p-6 text-center transform hover:scale-105 transition-transform duration-300">
-                <a href="#" class="block">
-                    <div class="w-16 h-16 rounded-full bg-gradient-to-br from-gray-500 to-gray-300 flex items-center justify-center mx-auto mb-4">
-                        <i class="fa fa-ellipsis-h text-white text-3xl"></i>
-                    </div>
-                </a>
-                <h4 class="font-bold mb-2">更多平台</h4>
-                <p class="text-sm text-gray-600">持续更新中...</p>
-            </div>
+    <section class="mb-20" id="Supported_Platforms" aria-labelledby="platforms-heading">
+        <div class="text-center mb-12">
+            <p class="text-primary font-semibold text-sm uppercase tracking-widest mb-2">生态覆盖</p>
+            <h3 id="platforms-heading" class="text-2xl sm:text-3xl font-bold text-slate-900">支持的平台</h3>
         </div>
+        <div id="platform-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6"></div>
     </section>
 
-    <!-- 使用教程 -->
-    <section class="max-w-4xl mx-auto mb-20">
-        <h3 class="text-2xl font-bold text-center mb-12">使用教程</h3>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <!-- 步骤1 -->
-            <div class="text-center">
-                <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4 text-primary">
-                    <span class="text-xl font-bold">1</span>
-                </div>
-                <h4 class="font-bold mb-3">复制视频链接</h4>
-                <p class="text-gray-600">打开抖音、快手等平台，找到想要下载的视频，点击分享按钮，选择"复制链接"</p>
-            </div>
-
-            <!-- 步骤2 -->
-            <div class="text-center">
-                <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4 text-primary">
-                    <span class="text-xl font-bold">2</span>
-                </div>
-                <h4 class="font-bold mb-3">粘贴链接</h4>
-                <p class="text-gray-600">回到本页面，将复制的链接粘贴到上方的输入框中</p>
-            </div>
-
-            <!-- 步骤3 -->
-            <div class="text-center">
-                <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4 text-primary">
-                    <span class="text-xl font-bold">3</span>
-                </div>
-                <h4 class="font-bold mb-3">下载视频</h4>
-                <p class="text-gray-600">点击"开始解析"按钮，解析完成后点击"下载无水印视频"按钮即可</p>
-            </div>
+    <section class="max-w-5xl mx-auto mb-20" id="course" aria-labelledby="course-heading">
+        <div class="text-center mb-12">
+            <p class="text-primary font-semibold text-sm uppercase tracking-widest mb-2">三步搞定</p>
+            <h3 id="course-heading" class="text-2xl sm:text-3xl font-bold text-slate-900">使用教程</h3>
         </div>
+        <div id="tutorial-steps" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
     </section>
 
-    <!-- 常见问题 -->
-    <section class="max-w-3xl mx-auto">
-        <h3 class="text-2xl font-bold text-center mb-12">常见问题</h3>
-        <div class="space-y-4">
-            <!-- 问题1 -->
-            <div class="card-neomorphism overflow-hidden">
-                <button class="faq-btn w-full text-left p-6 focus:outline-none flex justify-between items-center">
-                    <span class="font-medium">为什么有些视频无法解析？</span>
-                    <i class="fa fa-chevron-down text-gray-400 transition-transform"></i>
-                </button>
-                <div class="faq-content hidden px-6 pb-6 pt-0">
-                    <p class="text-gray-600">
-                        有些平台可能会更新其防爬机制，导致暂时无法解析。我们会尽快更新解析算法。此外，部分受版权保护的视频可能无法解析。</p>
-                </div>
-            </div>
-
-            <!-- 问题2 -->
-            <div class="card-neomorphism overflow-hidden">
-                <button class="faq-btn w-full text-left p-6 focus:outline-none flex justify-between items-center">
-                    <span class="font-medium">下载的视频有水印怎么办？</span>
-                    <i class="fa fa-chevron-down text-gray-400 transition-transform"></i>
-                </button>
-                <div class="faq-content hidden px-6 pb-6 pt-0">
-                    <p class="text-gray-600">
-                        如果下载的视频仍然带有水印，可能是因为该平台的水印去除算法需要更新。请联系我们，我们会尽快处理。</p>
-                </div>
-            </div>
-
-            <!-- 问题3 -->
-            <div class="card-neomorphism overflow-hidden">
-                <button class="faq-btn w-full text-left p-6 focus:outline-none flex justify-between items-center">
-                    <span class="font-medium">解析和下载视频是否收费？</span>
-                    <i class="fa fa-chevron-down text-gray-400 transition-transform"></i>
-                </button>
-                <div class="faq-content hidden px-6 pb-6 pt-0">
-                    <p class="text-gray-600">
-                        我们的服务完全免费，不收取任何费用。请警惕其他声称可以提供更高级解析服务的付费网站。</p>
-                </div>
-            </div>
+    <section class="max-w-3xl mx-auto mb-12" id="questions" aria-labelledby="faq-heading">
+        <div class="text-center mb-12">
+            <p class="text-primary font-semibold text-sm uppercase tracking-widest mb-2">帮助</p>
+            <h3 id="faq-heading" class="text-2xl sm:text-3xl font-bold text-slate-900">常见问题</h3>
         </div>
+        <div id="faq-list" class="space-y-3"></div>
     </section>
 </main>
 
-<!-- 页脚 -->
-<footer class="bg-dark text-white py-12">
-    <div class="container mx-auto px-4">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+<footer class="bg-dark text-slate-200 py-14" id="ours">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-10">
             <div>
-                <div class="flex items-center space-x-2 mb-4">
-                    <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white shadow-lg">
-                        <i class="fa fa-play-circle text-xl"></i>
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white shadow-glow">
+                        <i class="fa fa-play-circle text-lg" aria-hidden="true"></i>
                     </div>
-                    <h2 class="text-xl font-bold">短视频解析工具</h2>
+                    <span class="text-xl font-bold text-white">短视频解析工具</span>
                 </div>
-                <p class="text-gray-400 mb-4">
-                    一个简单易用的短视频解析工具，支持抖音、快手、B站等多个平台的无水印视频解析和下载。
+                <p class="text-slate-400 text-sm leading-relaxed mb-5">
+                    简单易用的短视频解析工具，支持多平台无水印视频与图集解析。
                 </p>
-                <div class="flex space-x-4">
-                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
-                        <i class="fa fa-weibo text-xl"></i>
-                    </a>
-                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
-                        <i class="fa fa-wechat text-xl"></i>
-                    </a>
-                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
-                        <i class="fa fa-github text-xl"></i>
-                    </a>
+                <div class="flex gap-4 text-slate-400">
+                    <a href="#" class="hover:text-white transition-colors p-1" aria-label="微博"><i class="fa fa-weibo text-xl" aria-hidden="true"></i></a>
+                    <a href="#" class="hover:text-white transition-colors p-1" aria-label="微信"><i class="fa fa-wechat text-xl" aria-hidden="true"></i></a>
+                    <a href="#" class="hover:text-white transition-colors p-1" aria-label="GitHub"><i class="fa fa-github text-xl" aria-hidden="true"></i></a>
                 </div>
             </div>
-
             <div>
-                <h3 class="text-lg font-semibold mb-4">快速链接</h3>
-                <ul class="space-y-2">
-                    <li><a href="#" class="text-gray-400 hover:text-white transition-colors">首页</a></li>
-                    <li><a href="#" class="text-gray-400 hover:text-white transition-colors">解析教程</a></li>
-                    <li><a href="#" class="text-gray-400 hover:text-white transition-colors">支持平台</a></li>
-                    <li><a href="#" class="text-gray-400 hover:text-white transition-colors">常见问题</a></li>
-                    <li><a href="#" class="text-gray-400 hover:text-white transition-colors">关于我们</a></li>
-                </ul>
+                <h3 class="text-white font-semibold mb-4">快速链接</h3>
+                <ul id="footer-links" class="space-y-2 text-sm"></ul>
             </div>
-
             <div>
-                <h3 class="text-lg font-semibold mb-4">联系我们</h3>
-                <ul class="space-y-2">
-                    <li class="flex items-start">
-                        <i class="fa fa-envelope text-primary mt-1 mr-3"></i>
-                        <span class="text-gray-400">contact@example.com</span>
+                <h3 class="text-white font-semibold mb-4">联系我们</h3>
+                <ul class="space-y-3 text-sm text-slate-400">
+                    <li class="flex gap-3">
+                        <i class="fa fa-envelope text-primary mt-0.5" aria-hidden="true"></i>
+                        <span>admin@bugpk.com</span>
                     </li>
-                    <li class="flex items-start">
-                        <i class="fa fa-comment text-primary mt-1 mr-3"></i>
-                        <span class="text-gray-400">在线客服</span>
+                    <li class="flex gap-3">
+                        <i class="fa fa-comment text-primary mt-0.5" aria-hidden="true"></i>
+                        <span>在线客服</span>
                     </li>
                 </ul>
             </div>
         </div>
-
-        <div class="border-t border-gray-800 pt-8 text-center text-gray-500 text-sm">
-            <p>© 2025 短视频解析工具. 保留所有权利.</p>
+        <div class="border-t border-slate-700/80 pt-8 text-center text-slate-500 text-sm">
+            <p>© <span id="footer-year"></span> 短视频解析工具 · 保留所有权利</p>
         </div>
     </div>
 </footer>
-<script>
-    // 添加移动菜单切换功能
-    document.addEventListener('DOMContentLoaded', function () {
-        const menuToggle = document.getElementById('menu-toggle');
-        const mobileMenu = document.getElementById('mobile-menu');
-
-        menuToggle.addEventListener('click', function () {
-            // 切换菜单显示状态
-            mobileMenu.classList.toggle('hidden');
-            // 添加动画效果
-            mobileMenu.classList.toggle('opacity-0');
-            mobileMenu.classList.toggle('translate-y-2');
-        });
-    });
+<script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "s4r046zw3x");
 </script>
+<script src="https://static.esa.ifphp.com/js/weather.js"></script>
 </body>
 </html>
