@@ -20,11 +20,13 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://static.esa.ifphp.com/css/inter.min.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script defer src="main.js?v=20260426"></script>
+    <script defer src="main.js?v=20260504"></script>
     <link href="https://static.esa.ifphp.com/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://static.esa.ifphp.com/css/swiper-bundle.min.css">
     <link href="https://static.esa.ifphp.com/css/weather.css" rel="stylesheet">
     <script src="https://static.esa.ifphp.com/js/swiper-bundle.min.js"></script>
+    <script src="https://static.eo.ifphp.com/js/console.bugpkapi.js"></script>
+
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -185,6 +187,11 @@
         }
         .rotate-180 { transform: rotate(180deg); transition: transform 0.3s ease; }
         .swiper-slide .btn-primary-gradient { z-index: 20; }
+        canvas { pointer-events: none; }
+        canvas.active { pointer-events: auto; }
+        .weather-card { z-index: 9998 !important; pointer-events: none !important; }
+        .weather-card button { pointer-events: auto !important; }
+        #toast-message { pointer-events: none !important; }
     </style>
     <script defer src="https://tj.ifphp.com/script.js" data-website-id="0bb3ba45-fffd-4194-86a4-b3b43c896fae"></script>
 </head>
