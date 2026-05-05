@@ -1,32 +1,31 @@
 <!--/**-->
 <!--*@Author: JH-Ahua-->
-<!--*@CreateTime: 2026/5/2 21:32-->
+<!--*@CreateTime: 2026/5/5 23:34-->
 <!--*@email: admin@bugpk.com-->
 <!--*@blog: www.jiuhunwl.cn-->
 <!--*@Api: api.bugpk.com-->
-<!--*@tip: 短视频解析前端-->
+<!--*@tip: 短视频解析 v3.0-->
 <!--*/-->
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="referrer" content="no-referrer">
-    <title>BK-SV短视频去水印解析工具 | 一键解析各大平台视频</title>
-    <link rel="icon" href="https://static.esa.ifphp.com/img/BugPk-api.png">
+    <title data-i18n="page.title">BK-SV短视频去水印解析工具 | 一键解析各大平台视频</title>
+    <link rel="icon" href="https://static.eo.ifphp.com/img/BugPk-api.png">
     <meta name="description" content="短视频图集去水印工具，支持各大平台。">
     <meta name="keywords" content="图集解析,图集去水印,短视频解析,短视频去水印,抖音解析,抖音短视频解析,抖音图集解析,抖音去水印,抖音短视频去水印,抖音图集去水印,快手解析,快手短视频解析,快手图集解析,快手去水印,快手短视频去水印,快图集手去水印,小红书解析,小红书短视频解析,小红书图集解析,小红书去水印,小红书短视频去水印,小红书图集去水印,皮皮虾解析,皮皮虾短视频解析,皮皮虾图集解析,皮皮虾去水印,皮皮虾短视频去水印,皮皮虾图集去水印,皮皮搞笑解析,皮皮搞笑短视频解析,皮皮搞笑图集解析,皮皮搞笑去水印,皮皮搞笑短视频去水印,皮皮搞笑图集去水印">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://static.esa.ifphp.com/css/inter.min.css" rel="stylesheet">
+    <link href="https://static.eo.ifphp.com/css/inter.min.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script defer src="main.js?v=20260504"></script>
-    <link href="https://static.esa.ifphp.com/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://static.esa.ifphp.com/css/swiper-bundle.min.css">
-    <link href="https://static.esa.ifphp.com/css/weather.css" rel="stylesheet">
-    <script src="https://static.esa.ifphp.com/js/swiper-bundle.min.js"></script>
-    <script src="https://static.eo.ifphp.com/js/console.bugpkapi.js"></script>
-
+    <link href="https://static.eo.ifphp.com/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://static.eo.ifphp.com/css/swiper-bundle.min.css">
+    <link href="https://static.eo.ifphp.com/css/weather.css" rel="stylesheet">
+    <script src="https://static.eo.ifphp.com/js/swiper-bundle.min.js"></script>
+    <script src="https://static.eo.ifphp.com/js/console.bugpkapi.js
+"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -44,7 +43,9 @@
                     },
                     boxShadow: {
                         'glow': '0 0 40px -10px rgba(79, 70, 229, 0.35)',
+                        'glow-lg': '0 0 60px -8px rgba(79, 70, 229, 0.35)',
                         'card': '0 4px 6px -1px rgba(15, 23, 42, 0.06), 0 20px 40px -12px rgba(79, 70, 229, 0.12)',
+                        'card-dark': '0 4px 6px -1px rgba(0,0,0,0.3), 0 20px 40px -12px rgba(0,0,0,0.4)',
                     },
                 }
             }
@@ -57,20 +58,47 @@
             --mesh-1: rgba(79, 70, 229, 0.12);
             --mesh-2: rgba(236, 72, 153, 0.1);
             --mesh-3: rgba(124, 58, 237, 0.1);
+            --bg-base: #f8fafc;
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --card-bg: rgba(255, 255, 255, 0.72);
+            --card-border: rgba(255, 255, 255, 0.55);
+            --header-bg: rgba(255, 255, 255, 0.75);
+            --input-bg: #f8fafc;
+            --toast-bg: #0f172a;
+            --toast-text: #fff;
+        }
+        .dark {
+            --surface: rgba(30, 41, 59, 0.72);
+            --surface-border: rgba(51, 65, 85, 0.55);
+            --mesh-1: rgba(99, 102, 241, 0.15);
+            --mesh-2: rgba(236, 72, 153, 0.12);
+            --mesh-3: rgba(124, 58, 237, 0.12);
+            --bg-base: #0f172a;
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --card-bg: rgba(30, 41, 59, 0.72);
+            --card-border: rgba(51, 65, 85, 0.55);
+            --header-bg: rgba(15, 23, 42, 0.85);
+            --input-bg: #1e293b;
+            --toast-bg: #1e293b;
+            --toast-text: #e2e8f0;
         }
         @layer utilities {
             .mesh-bg {
-                background-color: #f8fafc;
+                background-color: var(--bg-base);
                 background-image:
                         radial-gradient(ellipse 80% 50% at 20% -10%, var(--mesh-1), transparent),
                         radial-gradient(ellipse 60% 40% at 100% 0%, var(--mesh-2), transparent),
                         radial-gradient(ellipse 50% 60% at 50% 100%, var(--mesh-3), transparent);
+                transition: background-color 0.5s ease;
             }
             .glass-header {
-                background: rgba(255, 255, 255, 0.75);
+                background: var(--header-bg);
                 backdrop-filter: blur(16px);
                 -webkit-backdrop-filter: blur(16px);
-                border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+                border-bottom: 1px solid var(--card-border);
+                transition: background 0.4s ease, border-color 0.4s ease;
             }
             .surface-card {
                 background: var(--surface);
@@ -78,6 +106,16 @@
                 -webkit-backdrop-filter: blur(20px);
                 border: 1px solid var(--surface-border);
                 box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.05), 0 24px 48px -12px rgba(79, 70, 229, 0.15);
+                transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease, transform 0.3s ease;
+            }
+            .surface-card:hover {
+                box-shadow: 0 8px 12px -2px rgba(15, 23, 42, 0.08), 0 32px 60px -16px rgba(79, 70, 229, 0.18);
+            }
+            .dark .surface-card {
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 24px 48px -12px rgba(0, 0, 0, 0.4);
+            }
+            .dark .surface-card:hover {
+                box-shadow: 0 8px 12px -2px rgba(0, 0, 0, 0.25), 0 32px 60px -16px rgba(0, 0, 0, 0.5);
             }
             .text-gradient {
                 background-clip: text;
@@ -91,12 +129,44 @@
             0%, 100% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
         }
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            33% { transform: translateY(-20px) rotate(1deg); }
+            66% { transform: translateY(10px) rotate(-1deg); }
+        }
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.4; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.05); }
+        }
+        @keyframes slideUpFade {
+            from { opacity: 0; transform: translateY(24px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        @keyframes progressPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.92); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(40px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
         .bg-gradient-animated {
             background: linear-gradient(120deg, #eef2ff 0%, #faf5ff 40%, #fce7f3 100%);
             background-size: 200% 200%;
             animation: gradientShift 18s ease infinite;
         }
-        /* 父级 text-gradient 会让子元素继承 color:transparent；单独给强调字上色，避免与浅色底融在一起 */
+        .dark .bg-gradient-animated {
+            background: linear-gradient(120deg, #0f172a 0%, #1e1b4b 40%, #1e293b 100%);
+            background-size: 200% 200%;
+        }
         .hero-emphasis {
             color: #3730a3;
             background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 45%, #db2777 100%);
@@ -105,6 +175,9 @@
             -webkit-text-fill-color: transparent;
             text-shadow: none;
             filter: drop-shadow(0 1px 1px rgba(255, 255, 255, 0.85));
+        }
+        .dark .hero-emphasis {
+            filter: drop-shadow(0 0 8px rgba(79, 70, 229, 0.3));
         }
         @supports not (-webkit-background-clip: text) {
             .hero-emphasis {
@@ -120,22 +193,35 @@
             padding: 0.5rem 1rem;
             font-size: 0.875rem;
             font-weight: 500;
-            transition: background-color 0.2s, color 0.2s, box-shadow 0.2s, transform 0.15s;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .platform-btn.active {
-            background-color: #4F46E5;
+            background: linear-gradient(135deg, #4F46E5, #7C3AED);
             color: #fff;
-            box-shadow: 0 0 40px -10px rgba(79, 70, 229, 0.35), 0 0 0 2px rgba(79, 70, 229, 0.25);
+            box-shadow: 0 4px 20px -6px rgba(79, 70, 229, 0.5);
+        }
+        .dark .platform-btn:not(.active) {
+            background: rgba(51, 65, 85, 0.6);
+            color: #cbd5e1;
+        }
+        .dark .platform-btn:not(.active):hover {
+            background: rgba(71, 85, 105, 0.8);
+            color: #f1f5f9;
         }
         .platform-btn:not(.active) {
-            background-color: rgba(241, 245, 249, 0.95);
+            background: rgba(241, 245, 249, 0.95);
             color: #475569;
         }
         .platform-btn:not(.active):hover {
-            background-color: rgba(226, 232, 240, 0.95);
+            background: rgba(226, 232, 240, 0.95);
             color: #1e293b;
         }
-        #mobile-menu { transition: opacity 0.25s ease, transform 0.25s ease; }
+        .platform-btn:active {
+            transform: scale(0.95);
+        }
+        #mobile-menu {
+            transition: opacity 0.25s ease, transform 0.25s ease;
+        }
         #mobile-menu:not(.hidden) { opacity: 1; transform: translateY(0); }
         #mobile-menu.hidden { opacity: 0; transform: translateY(-8px); pointer-events: none; }
         .gallery-nav-button {
@@ -151,6 +237,12 @@
             align-items: center;
             justify-content: center;
             color: #fff;
+            cursor: pointer;
+            transition: background 0.25s, transform 0.25s;
+        }
+        .gallery-nav-button:hover {
+            background: rgba(15, 23, 42, 0.7);
+            transform: translateY(-50%) scale(1.08);
         }
         .gallery-pagination { position: absolute; bottom: 0; left: 0; width: 100%; text-align: center; }
         .gallery-pagination .swiper-pagination-bullet {
@@ -167,39 +259,361 @@
             border-radius: 14px;
             background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 50%, #6366f1 100%);
             box-shadow: 0 4px 14px -3px rgba(79, 70, 229, 0.55);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease, opacity 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-primary-gradient::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 50%);
+            pointer-events: none;
         }
         .btn-primary-gradient:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px -4px rgba(79, 70, 229, 0.45);
+            transform: translateY(-2px) scale(1.01);
+            box-shadow: 0 8px 28px -4px rgba(79, 70, 229, 0.5);
         }
-        .btn-primary-gradient:active { transform: translateY(0); }
+        .btn-primary-gradient:active { transform: translateY(0) scale(0.98); }
+        .btn-primary-gradient:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+        .btn-primary-gradient .btn-spinner {
+            display: none;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            margin-right: 6px;
+        }
+        .btn-primary-gradient.is-loading .btn-spinner { display: inline-block; }
+        .btn-primary-gradient.is-loading .btn-label { opacity: 0.85; }
+        @keyframes spin { to { transform: rotate(360deg); } }
         .input-soft {
             border-radius: 14px;
-            background: #f8fafc;
+            background: var(--input-bg);
             border: 1px solid rgba(15, 23, 42, 0.08);
-            transition: border-color 0.2s, box-shadow 0.2s;
+            transition: border-color 0.25s, box-shadow 0.25s, background 0.3s;
+            color: var(--text-primary);
+            caret-color: #4F46E5;
+        }
+        .dark .input-soft {
+            border-color: rgba(148, 163, 184, 0.15);
         }
         .input-soft:focus {
             outline: none;
-            border-color: rgba(79, 70, 229, 0.45);
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+            border-color: rgba(79, 70, 229, 0.5);
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.12), 0 1px 2px rgba(15, 23, 42, 0.05);
         }
-        .rotate-180 { transform: rotate(180deg); transition: transform 0.3s ease; }
+        .input-soft:focus:not(:placeholder-shown) {
+            border-color: rgba(79, 70, 229, 0.6);
+        }
+        .input-soft::placeholder {
+            color: #94a3b8;
+        }
+        .rotate-180 { transform: rotate(180deg); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .swiper-slide .btn-primary-gradient { z-index: 20; }
-        canvas { pointer-events: none; }
-        canvas.active { pointer-events: auto; }
-        .weather-card { z-index: 9998 !important; pointer-events: none !important; }
-        .weather-card button { pointer-events: auto !important; }
-        #toast-message { pointer-events: none !important; }
+
+        /* === Theme Toggle === */
+        .theme-toggle-btn {
+            width: 40px; height: 40px;
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.3s ease;
+            background: transparent;
+            border: 1px solid transparent;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+        .theme-toggle-btn:hover {
+            background: rgba(79, 70, 229, 0.1);
+            border-color: rgba(79, 70, 229, 0.2);
+        }
+        .theme-toggle-btn .icon-sun,
+        .theme-toggle-btn .icon-moon {
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s;
+        }
+        .theme-toggle-btn .icon-sun { transform: scale(1); opacity: 1; }
+        .theme-toggle-btn .icon-moon { transform: scale(0); opacity: 0; position: absolute; }
+        .dark .theme-toggle-btn .icon-sun { transform: scale(0); opacity: 0; }
+        .dark .theme-toggle-btn .icon-moon { transform: scale(1); opacity: 1; }
+
+        /* === Particle Canvas === */
+        #particle-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: -8 !important;
+            pointer-events: none !important;
+        }
+
+        /* === Lang Switcher === */
+        .lang-btn {
+            padding: 0.35rem 0.6rem;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: all 0.25s;
+            cursor: pointer;
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-secondary);
+            letter-spacing: 0.02em;
+        }
+        .lang-btn:hover {
+            background: rgba(79, 70, 229, 0.1);
+            border-color: rgba(79, 70, 229, 0.2);
+        }
+        .lang-btn.active {
+            background: rgba(79, 70, 229, 0.12);
+            color: #4F46E5;
+            border-color: rgba(79, 70, 229, 0.25);
+        }
+        .dark .lang-btn.active {
+            background: rgba(99, 102, 241, 0.2);
+            color: #a5b4fc;
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+        /* === Progress Card === */
+        #progress-card {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 200;
+            width: 360px;
+            max-width: calc(100vw - 32px);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+            pointer-events: none;
+        }
+        #progress-card.show {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+        #progress-card.closing {
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+            pointer-events: none;
+        }
+        .progress-bar-track {
+            width: 100%;
+            height: 6px;
+            background: rgba(148, 163, 184, 0.2);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: 3px;
+            background: linear-gradient(90deg, #4F46E5, #7C3AED, #6366f1);
+            background-size: 200% 100%;
+            animation: shimmer 2s linear infinite;
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .progress-bar-fill.done {
+            background: linear-gradient(90deg, #10b981, #34d399);
+            animation: none;
+        }
+        .progress-bar-fill.error {
+            background: #ef4444;
+            animation: none;
+        }
+
+        /* === Scroll Reveal === */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .reveal.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+
+        /* === Skeleton === */
+        .skeleton {
+            background: linear-gradient(90deg, rgba(148,163,184,0.1) 25%, rgba(148,163,184,0.2) 50%, rgba(148,163,184,0.1) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.8s ease infinite;
+            border-radius: 8px;
+        }
+        .dark .skeleton {
+            background: linear-gradient(90deg, rgba(148,163,184,0.05) 25%, rgba(148,163,184,0.15) 50%, rgba(148,163,184,0.05) 75%);
+            background-size: 200% 100%;
+        }
+
+        /* === Toast refinements === */
+        .toast-enter { animation: slideInRight 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+        .toast-leave { animation: fadeInScale 0.25s ease reverse forwards; }
+
+        /* === Nav refinements === */
+        .dark .text-slate-600 { color: #94a3b8; }
+        .dark .text-slate-700 { color: #cbd5e1; }
+        .dark .text-slate-800 { color: var(--text-primary); }
+        .dark .text-slate-900 { color: #f1f5f9; }
+        .dark .text-slate-500 { color: #64748b; }
+        .dark .bg-slate-50\/90 { background: rgba(30, 41, 59, 0.8); }
+        .dark .border-slate-100 { border-color: rgba(51, 65, 85, 0.5); }
+        .dark .border-slate-200\/80 { border-color: rgba(51, 65, 85, 0.4); }
+        .dark .bg-slate-100 { background: #1e293b; }
+        .dark .hover\:bg-slate-100:hover { background: rgba(51, 65, 85, 0.5); }
+        .dark .bg-emerald-50 { background: rgba(5, 150, 105, 0.1); }
+        .dark .text-emerald-700 { color: #6ee7b7; }
+        .dark .border-emerald-100 { border-color: rgba(5, 150, 105, 0.2); }
+        .dark .bg-white\/85 { background: rgba(30, 41, 59, 0.75); }
+        .dark .border-slate-200\/60 { border-color: rgba(51, 65, 85, 0.4); }
+        .dark .text-slate-700 { color: #cbd5e1; }
+        .dark .bg-indigo-50 { background: rgba(99, 102, 241, 0.15); }
+        .dark .text-indigo-700 { color: #a5b4fc; }
+        .dark .bg-fuchsia-50 { background: rgba(217, 70, 239, 0.12); }
+        .dark .text-fuchsia-700 { color: #f0abfc; }
+        .dark .bg-red-50 { background: rgba(239, 68, 68, 0.1); }
+        .dark .text-red-900 { color: #fca5a5; }
+        .dark .text-red-700 { color: #fca5a5; }
+        .dark .border-red-200\/80 { border-color: rgba(239, 68, 68, 0.2); }
+
+        /* === Download button pulse === */
+        @keyframes btnPulse {
+            0% { box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.5); }
+            70% { box-shadow: 0 0 0 12px rgba(79, 70, 229, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(79, 70, 229, 0); }
+        }
+        .download-pulse {
+            animation: btnPulse 1.5s ease infinite;
+        }
+
+        /* === Mobile menu dark === */
+        .dark #mobile-menu {
+            background: rgba(15, 23, 42, 0.95);
+            border-bottom-color: rgba(51, 65, 85, 0.5);
+        }
+        .dark #mobile-menu a {
+            color: #e2e8f0;
+            border-bottom-color: rgba(51, 65, 85, 0.3);
+        }
+        .dark #mobile-menu a:hover {
+            background: rgba(51, 65, 85, 0.5);
+        }
+
+        /* === Footer dark === */
+        .dark .bg-dark {
+            background: #020617;
+        }
+
+        /* === Social Links === */
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 0.5rem;
+            background: #334155;
+            color: #94a3b8;
+            transition: all 0.2s ease;
+            font-size: 1rem;
+        }
+
+        .social-link:hover {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        /* === Footer Links === */
+        .footer-link {
+            display: inline-flex;
+            align-items: center;
+            color: #94a3b8;
+            font-size: 0.875rem;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            padding: 0.25rem 0;
+        }
+
+        .footer-link:hover {
+            color: #6366f1;
+            transform: translateX(4px);
+        }
+
+        /* === GitHub Button === */
+        .github-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: linear-gradient(135deg, #24292e 0%, #1b1f23 100%);
+            color: white;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .github-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+        }
+
+        /* === Responsive tweak for progress card === */
+        @media (max-width: 480px) {
+            #progress-card { bottom: 16px; right: 16px; left: 16px; width: auto; }
+        }
     </style>
     <script defer src="https://tj.ifphp.com/script.js" data-website-id="0bb3ba45-fffd-4194-86a4-b3b43c896fae"></script>
 </head>
 <body class="min-h-screen mesh-bg font-inter text-slate-800 antialiased overflow-x-hidden bg-gradient-animated">
+
+<!-- Particle Background -->
+<canvas id="particle-canvas" aria-hidden="true"></canvas>
+
+<!-- Background decorations -->
 <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none" aria-hidden="true">
-    <div class="absolute top-24 left-[10%] w-72 h-72 rounded-full bg-primary/15 blur-3xl"></div>
-    <div class="absolute bottom-20 right-[8%] w-96 h-96 rounded-full bg-accent/15 blur-3xl"></div>
-    <div class="absolute top-1/2 left-1/3 w-80 h-80 rounded-full bg-secondary/10 blur-3xl"></div>
+    <div class="absolute top-24 left-[10%] w-72 h-72 rounded-full bg-primary/15 blur-3xl animate-pulse-glow" style="animation: pulse-glow 6s ease-in-out infinite;"></div>
+    <div class="absolute bottom-20 right-[8%] w-96 h-96 rounded-full bg-accent/15 blur-3xl animate-pulse-glow" style="animation: pulse-glow 8s ease-in-out infinite; animation-delay: -2s;"></div>
+    <div class="absolute top-1/2 left-1/3 w-80 h-80 rounded-full bg-secondary/10 blur-3xl animate-pulse-glow" style="animation: pulse-glow 7s ease-in-out infinite; animation-delay: -4s;"></div>
+    <div class="absolute top-1/4 right-1/4 w-48 h-48 rounded-full bg-emerald-400/8 blur-3xl animate-pulse-glow" style="animation: pulse-glow 10s ease-in-out infinite; animation-delay: -1s;"></div>
+</div>
+
+<!-- Progress Card (download progress) -->
+<div id="progress-card" role="status" aria-live="polite">
+    <div class="surface-card rounded-2xl p-4 shadow-card border">
+        <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center gap-2">
+                <i class="fa fa-download text-primary text-sm" aria-hidden="true"></i>
+                <span class="text-sm font-semibold text-slate-800" data-i18n="progress.title">下载进度</span>
+            </div>
+            <button type="button" id="progress-close-btn" class="text-slate-400 hover:text-slate-600 transition-colors p-1 rounded-lg hover:bg-slate-100" aria-label="关闭进度">
+                <i class="fa fa-times" aria-hidden="true"></i>
+            </button>
+        </div>
+        <div class="progress-bar-track mb-2">
+            <div id="progress-bar-fill" class="progress-bar-fill" style="width:0%"></div>
+        </div>
+        <div class="flex items-center justify-between text-xs text-slate-500">
+            <span id="progress-text" data-i18n="progress.starting">准备中…</span>
+            <span id="progress-percent">0%</span>
+        </div>
+        <div class="mt-3 flex gap-2">
+            <button type="button" id="progress-cancel-btn" class="flex-1 rounded-xl border border-red-300 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 px-3 py-1.5 text-xs font-medium transition-colors" data-i18n="progress.cancel">
+                <i class="fa fa-ban mr-1" aria-hidden="true"></i><span>取消下载</span>
+            </button>
+        </div>
+    </div>
 </div>
 
 <header class="glass-header fixed top-0 left-0 right-0 z-50 transition-all duration-300 py-4" id="navbar">
@@ -209,60 +623,83 @@
                 <i class="fa fa-play-circle text-lg" aria-hidden="true"></i>
             </div>
             <div>
-                <span class="text-lg font-bold text-gradient bg-gradient-to-r from-primary via-secondary to-accent leading-tight block">短视频解析</span>
-                <span class="text-[11px] text-slate-500 font-medium tracking-wide uppercase">无水印 · 免费</span>
+                <span class="text-lg font-bold text-gradient bg-gradient-to-r from-primary via-secondary to-accent leading-tight block" data-i18n="header.brand">短视频解析</span>
+                <span class="text-[11px] text-slate-500 font-medium tracking-wide uppercase" data-i18n="header.subtitle">无水印 · 免费</span>
             </div>
         </a>
-        <nav id="nav-desktop" class="hidden md:flex items-center gap-8 text-sm font-medium" aria-label="主导航"></nav>
-        <button type="button" id="menu-toggle" class="md:hidden p-2 rounded-lg text-slate-700 hover:bg-slate-100 transition-colors" aria-expanded="false" aria-controls="mobile-menu" aria-label="打开菜单">
-            <i class="fa fa-bars text-xl" aria-hidden="true"></i>
-        </button>
+
+        <nav id="nav-desktop" class="hidden md:flex items-center gap-6 text-sm font-medium" aria-label="主导航"></nav>
+
+        <div class="flex items-center gap-2 sm:gap-3">
+            <!-- Language Switcher -->
+            <div class="hidden sm:flex items-center border border-slate-200/60 dark:border-slate-700/50 rounded-lg overflow-hidden">
+                <button type="button" class="lang-btn active" data-lang="zh-CN">简</button>
+                <button type="button" class="lang-btn" data-lang="en">EN</button>
+            </div>
+
+            <!-- Theme Toggle -->
+            <button type="button" id="theme-toggle-btn" class="theme-toggle-btn relative" aria-label="切换主题">
+                <i class="fa fa-sun icon-sun text-lg" aria-hidden="true"></i>
+                <i class="fa fa-moon icon-moon text-lg" aria-hidden="true"></i>
+            </button>
+
+            <!-- Mobile Menu Trigger -->
+            <button type="button" id="menu-toggle" class="md:hidden p-2 rounded-lg text-slate-700 hover:bg-slate-100 transition-colors" aria-expanded="false" aria-controls="mobile-menu" aria-label="打开菜单">
+                <i class="fa fa-bars text-xl" aria-hidden="true"></i>
+            </button>
+        </div>
     </div>
-    <div id="mobile-menu" class="hidden md:hidden absolute top-full left-0 right-0 glass-header border-b border-slate-200/80 shadow-card" role="dialog" aria-label="移动端菜单">
+    <div id="mobile-menu" class="hidden md:hidden absolute top-full left-0 right-0 glass-header border-b border-slate-200/80 shadow-card z-[60]" role="dialog" aria-label="移动端菜单">
         <nav id="nav-mobile" class="max-w-6xl mx-auto px-4 py-4 flex flex-col gap-1" aria-label="移动端导航"></nav>
+        <div class="px-4 pb-4 flex items-center gap-2 border-t border-slate-200/80 dark:border-slate-700/50 pt-3">
+            <button type="button" class="lang-btn active flex-1 text-center" data-lang="zh-CN">简体中文</button>
+            <button type="button" class="lang-btn flex-1 text-center" data-lang="en">English</button>
+        </div>
     </div>
 </header>
 
 <main class="max-w-6xl mx-auto px-4 sm:px-6 pt-28 sm:pt-32 pb-20">
-    <section class="mb-16 sm:mb-20 text-center" aria-labelledby="hero-title">
-        <p class="text-primary font-semibold text-sm tracking-widest uppercase mb-3">BK-SV · 多平台解析</p>
-        <h2 id="hero-title" class="text-[clamp(1.75rem,5vw,3.25rem)] font-extrabold leading-tight mb-5 text-gradient bg-gradient-to-r from-primary via-secondary to-accent">
-            轻松解析<span class="hero-emphasis">任何</span>短视频
+    <section class="mb-16 sm:mb-20 text-center reveal" aria-labelledby="hero-title">
+        <p class="text-primary font-semibold text-sm tracking-widest uppercase mb-3" data-i18n="hero.badge">BK-SV v3.0 · 多平台解析</p>
+        <h2 id="hero-title" class="text-[clamp(1.75rem,5vw,3.25rem)] font-extrabold leading-tight mb-5">
+            <span data-i18n="hero.title1">轻松解析</span><span class="hero-emphasis" data-i18n="hero.title2">任何</span><span data-i18n="hero.title3">短视频</span>
         </h2>
-        <p class="text-slate-600 text-[clamp(0.95rem,2vw,1.15rem)] max-w-2xl mx-auto mb-10 leading-relaxed">
+        <p class="text-slate-600 dark:text-slate-400 text-[clamp(0.95rem,2vw,1.15rem)] max-w-2xl mx-auto mb-10 leading-relaxed" data-i18n="hero.desc">
             支持抖音、快手、B 站、小红书等平台，一键提取无水印视频与图集，简单免费。
         </p>
         <div id="hero-features" class="flex flex-wrap justify-center gap-3 mb-4" role="list"></div>
     </section>
 
-    <section class="max-w-3xl mx-auto mb-20" aria-label="解析工具">
+    <section class="max-w-3xl mx-auto mb-20 reveal reveal-delay-1" aria-label="解析工具">
         <div class="surface-card rounded-3xl p-6 sm:p-8 relative overflow-hidden">
             <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-secondary to-accent rounded-t-3xl" aria-hidden="true"></div>
             <div id="platform-tabs" class="flex flex-wrap gap-2 sm:gap-3 mb-6" role="tablist" aria-label="选择平台接口"></div>
             <div class="relative mb-6">
-                <label for="video-url" class="sr-only">视频链接</label>
+                <label for="video-url" class="sr-only" data-i18n="input.label">视频链接</label>
                 <input type="text" id="video-url" autocomplete="off"
-                       class="input-soft w-full py-4 pl-5 pr-12 text-base sm:text-lg placeholder-slate-400 text-slate-800"
+                       class="input-soft w-full py-4 pl-5 pr-12 text-base sm:text-lg"
+                       data-i18n-placeholder="input.placeholder"
                        placeholder="粘贴分享链接或含链接的文本…">
                 <button type="button" id="clear-btn"
-                        class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors p-1 rounded-lg hover:bg-slate-100"
-                        aria-label="清空输入">
+                        class="absolute right-4 top-1/2 -translate-y-1/2 z-10 text-slate-400 hover:text-slate-600 transition-colors p-1 rounded-lg hover:bg-slate-100"
+                        aria-label="清空输入"
+                        style="pointer-events: auto;">
                     <i class="fa fa-times-circle text-lg" aria-hidden="true"></i>
                 </button>
             </div>
             <button type="button" id="parse-btn"
                     class="btn-primary-gradient w-full py-4 text-white font-bold text-base sm:text-lg flex items-center justify-center gap-2">
                 <i class="fa fa-magic" aria-hidden="true"></i>
-                <span>开始解析</span>
+                <span data-i18n="parse.button">开始解析</span>
                 <span id="parse-loader" class="hidden" aria-hidden="true"><i class="fa fa-spinner fa-spin"></i></span>
             </button>
 
             <div id="result-container" class="mt-8 hidden">
-                <div class="border-t border-slate-200/80 pt-6">
-                    <h3 class="text-lg font-semibold text-slate-800 mb-4">解析结果</h3>
-                    <div class="mb-4 inline-flex items-center gap-2 rounded-full bg-emerald-50 text-emerald-700 px-3 py-1 text-xs font-medium border border-emerald-100">
+                <div class="border-t border-slate-200/80 dark:border-slate-700/50 pt-6">
+                    <h3 class="text-lg font-semibold text-slate-800 mb-4" data-i18n="result.title">解析结果</h3>
+                    <div class="mb-4 inline-flex items-center gap-2 rounded-full bg-emerald-50 text-emerald-700 px-3 py-1 text-xs font-medium border border-emerald-100 dark:border-emerald-900/30">
                         <i class="fa fa-link" aria-hidden="true"></i>
-                        <span>当前使用源链接直连播放与下载</span>
+                        <span data-i18n="result.sourceHint">当前使用源链接直连播放与下载</span>
                     </div>
                     <div class="rounded-2xl overflow-hidden mb-6 shadow-card border border-slate-100/80">
                         <div id="video-placeholder" class="w-full min-h-[14rem] bg-slate-100 flex items-center justify-center">
@@ -275,21 +712,21 @@
             </div>
 
             <div id="loading-container" class="mt-8 hidden">
-                <div class="border-t border-slate-200/80 pt-8 flex flex-col items-center text-center">
+                <div class="border-t border-slate-200/80 dark:border-slate-700/50 pt-8 flex flex-col items-center text-center">
                     <div class="w-14 h-14 border-[3px] border-primary/25 border-t-primary rounded-full animate-spin mb-4" role="status" aria-label="加载中"></div>
-                    <p class="text-lg font-semibold text-slate-800">正在解析…</p>
-                    <p class="text-sm text-slate-500 mt-2 max-w-xs">通常几秒内完成，请稍候</p>
+                    <p class="text-lg font-semibold text-slate-800" data-i18n="loading.title">正在解析…</p>
+                    <p class="text-sm text-slate-500 mt-2 max-w-xs" data-i18n="loading.desc">通常几秒内完成，请稍候</p>
                 </div>
             </div>
 
             <div id="error-container" class="mt-8 hidden">
-                <div class="border-t border-slate-200/80 pt-6">
+                <div class="border-t border-slate-200/80 dark:border-slate-700/50 pt-6">
                     <div class="rounded-2xl bg-red-50 border border-red-200/80 p-4 flex gap-3 cursor-pointer hover:bg-red-50/90 transition-colors"
                          role="alert" data-dismiss-error>
                         <i class="fa fa-circle-exclamation text-red-500 mt-0.5 text-xl shrink-0" aria-hidden="true"></i>
                         <div>
-                            <h4 class="font-semibold text-red-900 mb-1">解析失败</h4>
-                            <p id="error-message" class="text-sm text-red-700 leading-relaxed"></p>
+                            <h4 class="font-semibold text-red-900 dark:text-red-300 mb-1" data-i18n="error.title">解析失败</h4>
+                            <p id="error-message" class="text-sm text-red-700 dark:text-red-300 leading-relaxed"></p>
                         </div>
                     </div>
                 </div>
@@ -297,73 +734,161 @@
         </div>
     </section>
 
-    <section class="mb-20" id="Supported_Platforms" aria-labelledby="platforms-heading">
+    <section class="mb-20 reveal reveal-delay-2" id="Supported_Platforms" aria-labelledby="platforms-heading">
         <div class="text-center mb-12">
-            <p class="text-primary font-semibold text-sm uppercase tracking-widest mb-2">生态覆盖</p>
-            <h3 id="platforms-heading" class="text-2xl sm:text-3xl font-bold text-slate-900">支持的平台</h3>
+            <p class="text-primary font-semibold text-sm uppercase tracking-widest mb-2" data-i18n="platforms.badge">生态覆盖</p>
+            <h3 id="platforms-heading" class="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-slate-100" data-i18n="platforms.title">支持的平台</h3>
         </div>
         <div id="platform-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6"></div>
     </section>
 
-    <section class="max-w-5xl mx-auto mb-20" id="course" aria-labelledby="course-heading">
+    <section class="max-w-5xl mx-auto mb-20 reveal" id="course" aria-labelledby="course-heading">
         <div class="text-center mb-12">
-            <p class="text-primary font-semibold text-sm uppercase tracking-widest mb-2">三步搞定</p>
-            <h3 id="course-heading" class="text-2xl sm:text-3xl font-bold text-slate-900">使用教程</h3>
+            <p class="text-primary font-semibold text-sm uppercase tracking-widest mb-2" data-i18n="tutorial.badge">三步搞定</p>
+            <h3 id="course-heading" class="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-slate-100" data-i18n="tutorial.title">使用教程</h3>
         </div>
         <div id="tutorial-steps" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
     </section>
 
-    <section class="max-w-3xl mx-auto mb-12" id="questions" aria-labelledby="faq-heading">
+    <section class="max-w-3xl mx-auto mb-12 reveal reveal-delay-1" id="questions" aria-labelledby="faq-heading">
         <div class="text-center mb-12">
-            <p class="text-primary font-semibold text-sm uppercase tracking-widest mb-2">帮助</p>
-            <h3 id="faq-heading" class="text-2xl sm:text-3xl font-bold text-slate-900">常见问题</h3>
+            <p class="text-primary font-semibold text-sm uppercase tracking-widest mb-2" data-i18n="faq.badge">帮助</p>
+            <h3 id="faq-heading" class="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-slate-100" data-i18n="faq.title">常见问题</h3>
         </div>
         <div id="faq-list" class="space-y-3"></div>
     </section>
 </main>
 
 <footer class="bg-dark text-slate-200 py-14" id="ours">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-10">
+    <div class="max-w-7xl mx-auto px-4 py-8 md:py-16">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
             <div>
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white shadow-glow">
-                        <i class="fa fa-play-circle text-lg" aria-hidden="true"></i>
+                <div class="flex items-center gap-3 mb-5">
+                    <div class="relative inline-block">
+                        <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center overflow-hidden">
+                            <img src="https://static.esa.ifphp.com/img/bugpk-Api-256×256.ico" alt="Logo" class="w-8 h-8 object-contain" />
+                        </div>
+                        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-14 h-14 bg-primary/20 rounded-full blur-md -z-10"></div>
                     </div>
-                    <span class="text-xl font-bold text-white">短视频解析工具</span>
+                    <div>
+                        <h4 class="font-bold text-lg text-white">短视频解析</h4>
+                        <p class="text-xs text-slate-400">BK-SV v3.0</p>
+                    </div>
                 </div>
-                <p class="text-slate-400 text-sm leading-relaxed mb-5">
-                    简单易用的短视频解析工具，支持多平台无水印视频与图集解析。
+                <p class="text-sm text-slate-400 leading-relaxed mb-5">
+                    简单易用的短视频解析工具，支持多平台无水印视频与图集解析，让分享更自由。
                 </p>
-                <div class="flex gap-4 text-slate-400">
-                    <a href="#" class="hover:text-white transition-colors p-1" aria-label="微博"><i class="fa fa-weibo text-xl" aria-hidden="true"></i></a>
-                    <a href="#" class="hover:text-white transition-colors p-1" aria-label="微信"><i class="fa fa-wechat text-xl" aria-hidden="true"></i></a>
-                    <a href="#" class="hover:text-white transition-colors p-1" aria-label="GitHub"><i class="fa fa-github text-xl" aria-hidden="true"></i></a>
+                <div class="flex items-center gap-3">
+                    <a href="https://github.com/jiuhunwl/shortvideo-html" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="GitHub">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="https://www.jiuhunwl.cn" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Blog">
+                        <i class="fas fa-globe"></i>
+                    </a>
+                    <a href="mailto:admin@bugpk.com" class="social-link" aria-label="Email">
+                        <i class="fas fa-envelope"></i>
+                    </a>
                 </div>
             </div>
             <div>
-                <h3 class="text-white font-semibold mb-4">快速链接</h3>
-                <ul id="footer-links" class="space-y-2 text-sm"></ul>
-            </div>
-            <div>
-                <h3 class="text-white font-semibold mb-4">联系我们</h3>
-                <ul class="space-y-3 text-sm text-slate-400">
-                    <li class="flex gap-3">
-                        <i class="fa fa-envelope text-primary mt-0.5" aria-hidden="true"></i>
-                        <span>admin@bugpk.com</span>
+                <h5 class="text-white font-semibold mb-4 flex items-center">
+                    <i class="fas fa-link mr-2 text-indigo-400"></i>
+                    快速链接
+                </h5>
+                <ul class="space-y-3 text-sm">
+                    <li>
+                        <a href="/" class="footer-link">
+                            <i class="fas fa-home text-xs mr-2"></i>首页
+                        </a>
                     </li>
-                    <li class="flex gap-3">
-                        <i class="fa fa-comment text-primary mt-0.5" aria-hidden="true"></i>
-                        <span>在线客服</span>
+                    <li>
+                        <a href="#course" class="footer-link">
+                            <i class="fas fa-book text-xs mr-2"></i>使用教程
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#Supported_Platforms" class="footer-link">
+                            <i class="fas fa-th text-xs mr-2"></i>支持平台
+                        </a>
                     </li>
                 </ul>
             </div>
+            <div>
+                <h5 class="text-white font-semibold mb-4 flex items-center">
+                    <i class="fas fa-question-circle mr-2 text-purple-400"></i>
+                    帮助与支持
+                </h5>
+                <ul class="space-y-3 text-sm">
+                    <li>
+                        <a href="#faq" class="footer-link">
+                            <i class="fas fa-comments text-xs mr-2"></i>常见问题
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#ours" class="footer-link">
+                            <i class="fas fa-info-circle text-xs mr-2"></i>关于我们
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://github.com/jiuhunwl/shortvideo-html/issues" target="_blank" rel="noopener noreferrer" class="footer-link">
+                            <i class="fab fa-github text-xs mr-2"></i>问题反馈
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div>
+                <h5 class="text-white font-semibold mb-4 flex items-center">
+                    <i class="fas fa-id-card mr-2 text-pink-400"></i>
+                    联系我们
+                </h5>
+                <ul class="space-y-3 text-sm text-slate-400">
+                    <li class="flex items-center gap-2">
+                        <i class="fas fa-user text-xs text-indigo-400"></i>
+                        <span>BugPk & Jh-Ahua</span>
+                    </li>
+                    <li>
+                        <a href="https://github.com/jiuhunwl/shortvideo-html" target="_blank" rel="noopener noreferrer" class="footer-link">
+                            <i class="fab fa-github text-xs mr-2"></i>
+                            <span class="truncate">jiuhunwl/shortvideo-html</span>
+                        </a>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <i class="fas fa-globe text-xs text-emerald-400"></i>
+                        <span>api.bugpk.com</span>
+                    </li>
+                </ul>
+                <div class="mt-5 flex items-center gap-2">
+                    <a href="https://github.com/jiuhunwl/shortvideo-html" target="_blank" rel="noopener noreferrer" class="github-btn">
+                        <i class="fab fa-github"></i>
+                        <span>给我们 Star</span>
+                    </a>
+                </div>
+            </div>
         </div>
-        <div class="border-t border-slate-700/80 pt-8 text-center text-slate-500 text-sm">
-            <p>© <span id="footer-year"></span> 短视频解析工具 · 保留所有权利</p>
+        <div class="border-t border-slate-700/50 pt-8">
+            <div class="flex flex-col sm:flex-row items-center justify-center md:justify-between gap-4">
+                <div class="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-sm text-slate-400">
+                    <p>© <span id="footer-year"></span> BugPk & JH-Ahua · 保留所有权利</p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <p class="text-sm text-slate-400">Powered by BugPk</p>
+                    <a href="https://github.com/jiuhunwl/shortvideo-html" target="_blank" rel="noopener noreferrer" class="text-sm font-medium text-indigo-400 hover:text-indigo-300 transition-colors flex items-center gap-1">
+                        <i class="fab fa-github text-xs"></i>
+                        <span>GitHub</span>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 </footer>
+<script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "s4r046zw3x");
+</script>
 <script src="https://static.esa.ifphp.com/js/weather.js"></script>
+<script src="main.js?v=20260504"></script>
 </body>
 </html>
