@@ -1,175 +1,414 @@
-# BK-SV v3.0 Video Watermark Remover
+# 🎬 BK-SV v3.0 Video Watermark Remover
 
-[中文](README_zh.md) | [English](#project-overview)
+[![GitHub Stars](https://img.shields.io/github/stars/jiuhunwl/shortvideo-html?style=social)](https://github.com/jiuhunwl/shortvideo-html)
+[![License](https://img.shields.io/github/license/jiuhunwl/shortvideo-html)](https://github.com/jiuhunwl/shortvideo-html/blob/main/LICENSE)
+[![Version](https://img.shields.io/badge/version-3.0-blue)](https://github.com/jiuhunwl/shortvideo-html)
+
+[中文](README.md) | [English](#project-overview)
 
 ---
 
-### Project Overview
+## 📋 Table of Contents
+
+- [Project Overview](#-project-overview)
+- [Tech Stack](#-tech-stack)
+- [Project Structure](#-project-structure)
+- [Quick Start](#-quick-start)
+- [Features](#-features)
+- [Core Modules](#-core-modules)
+- [API Endpoints](#-api-endpoints)
+- [Component Architecture](#-component-architecture)
+- [Configuration](#-configuration)
+- [Browser Compatibility](#-browser-compatibility)
+- [Development Guide](#-development-guide)
+- [Deployment](#-deployment)
+- [License](#-license)
+- [Contact](#-contact)
+
+---
+
+## 🌟 Project Overview
 
 BK-SV v3.0 is a simple and efficient online video watermark removal tool that supports one-click watermark-free video and album extraction from major platforms like Douyin, Kuaishou, Bilibili, Xiaohongshu, and more.
 
-**Features:**
-- Multi-platform Support: Douyin, Kuaishou, Bilibili, Xiaohongshu, Weibo, Weishi, Pipix, and more
-- Watermark Removal: One-click extraction of videos and albums without watermarks
-- Simple & Free: No registration required, use directly
-- Beautiful UI: Modern design with light/dark mode support
-- Multi-language: Chinese, English
+> 💡 **Highlight**: This project has been completely refactored with **Vue 3** framework, adopting modern frontend technology stack for better performance and development experience.
 
-### Live Demo
+### ✨ Core Features
 
-- Website: https://www.jiuhunwl.cn
-- API: https://api.bugpk.com
+| Feature | Description |
+|---------|-------------|
+| 🌐 Multi-platform | Douyin, Kuaishou, Bilibili, Xiaohongshu, Weibo, Weishi, Pipix, etc. |
+| 🚀 Watermark Removal | One-click extraction of videos and albums without watermarks |
+| 🔓 Free & Simple | No registration required, use directly |
+| 🎨 Modern UI | Modern design with automatic light/dark mode switching |
+| 🌍 Multi-language | Chinese, English |
+| 📥 Batch Download | Pack and download multiple images and video resources |
 
-### Tech Stack
+### 🔗 Live Demo
 
-- **Frontend**: Vanilla JavaScript
-- **CSS Framework**: Tailwind CSS
-- **Icons**: Font Awesome 6
-- **Features**: Responsive design, particle background animation, theme toggle, multi-language support
+- 🖥️ Website: [https://sv.bugpk.com](https://sv.bugpk.com)
+- 🔌 API Service: [https://api.bugpk.com](https://api.bugpk.com)
 
-### File Structure
+---
+
+## 🛠️ Tech Stack
+
+| Category | Technology | Version | Description |
+|----------|------------|---------|-------------|
+| Framework | <img src="https://img.shields.io/badge/Vue.js-3.x-green?logo=vue.js"/> | 3.x | Progressive JavaScript framework |
+| Build Tool | <img src="https://img.shields.io/badge/Vite-6.x-purple?logo=vite"/> | 6.x | Next-generation frontend build tool |
+| State Management | <img src="https://img.shields.io/badge/Pinia-2.x-blue?logo=pinia"/> | 2.x | Vue official state management |
+| Router | <img src="https://img.shields.io/badge/Vue_Router-4.x-orange?logo=vue.js"/> | 4.x | Vue official routing manager |
+| CSS Framework | <img src="https://img.shields.io/badge/Tailwind_CSS-3.x-cyan?logo=tailwind-css"/> | 3.x | Utility-first CSS framework |
+| Icons | <img src="https://img.shields.io/badge/Font_Awesome-6.x-red?logo=font-awesome"/> | 6.x | Popular icon library |
+| Compression | <img src="https://img.shields.io/badge/JSZip-3.x-yellow"/> | 3.x | For packaging download resources |
+
+---
+
+## 📁 Project Structure
 
 ```
-html/
-├── index.html          # Main page
-├── main.js            # Core JavaScript logic
-├── README.md          # Documentation entry (Chinese/English switch)
-└── README_en.md      # This file
+shortvideo-html/                              # Project root
+├── src/                                      # Source directory
+│   ├── components/                           # Vue components (12)
+│   │   ├── HeaderNav.vue                     # Top navigation bar
+│   │   ├── HeroSection.vue                   # Hero banner section
+│   │   ├── PlatformTabs.vue                  # Platform selection tabs
+│   │   ├── PlatformGrid.vue                  # Supported platforms grid
+│   │   ├── ResultSection.vue                 # Parsing result display
+│   │   ├── TutorialSection.vue               # Usage tutorial
+│   │   ├── FaqSection.vue                    # FAQ section
+│   │   ├── FooterSection.vue                 # Footer
+│   │   ├── ToastContainer.vue                # Toast notifications container
+│   │   ├── ProgressModal.vue                 # Progress modal
+│   │   ├── DownloadCard.vue                  # Download card
+│   │   └── ParticlesCanvas.vue               # Particle background animation
+│   ├── composables/                          # Composables (3)
+│   │   ├── useButtonControl.js               # Button control (debounce, retry, timeout)
+│   │   ├── useI18n.js                        # Internationalization support
+│   │   └── useRequestTimeout.js              # Request timeout handling
+│   ├── stores/                               # Pinia stores (1)
+│   │   └── video.js                          # Video parsing state
+│   ├── services/                             # Services (2)
+│   │   ├── operationLogger.js                # Operation logger
+│   │   └── retryManager.js                   # Request retry manager
+│   ├── utils/                                # Utility functions (2)
+│   │   ├── antiReplay.js                     # Anti-replay protection
+│   │   └── rateLimit.js                      # Rate limiting
+│   ├── router/                               # Router configuration (1)
+│   │   └── index.js                          # Route definitions
+│   ├── assets/                               # Static assets
+│   │   └── design-system.css                 # Design system styles
+│   ├── App.vue                               # Root component
+│   ├── main.js                               # Application entry
+│   └── style.css                             # Global styles
+├── dist/                                     # Build output (generated by npm run build)
+├── index.html                                # HTML template
+├── vite.config.js                            # Vite configuration
+├── tailwind.config.js                        # Tailwind CSS configuration
+├── postcss.config.js                         # PostCSS configuration
+├── LICENSE                                   # License
+├── README.md                                 # Documentation (Chinese)
+└── README_en.md                              # Documentation (English)
 ```
 
-### Quick Start
+---
 
-1. **Clone the project**
-   ```bash
-   git clone https://github.com/jiuhunwl/shortvideo-html.git
-   ```
+## 🚀 Quick Start
 
-2. **Run locally**
-   - Open `index.html` directly in a browser
-   - Or use a local server:
-     ```bash
-     # Python 3
-     python -m http.server 8080
+### Environment Requirements
 
-     # Node.js
-     npx serve .
-     ```
+| Dependency | Minimum Version | Description |
+|------------|-----------------|-------------|
+| Node.js | >= 18.0.0 | JavaScript runtime |
+| npm | >= 9.0.0 | Package manager |
 
-3. **Access the page**
-   Visit `http://localhost:8080` in your browser
+### Install Dependencies
 
-### Features
+```bash
+npm install
+```
 
-#### 1. Video Parsing
-- Paste the short video share link into the input box
-- Select the corresponding platform (optional)
-- Click the "Start Parsing" button
-- After successful parsing, download watermark-free videos or albums
+### Development Mode
 
-#### 2. Platform Switching
-Supported platforms:
-- Douyin
-- Kuaishou
-- Bilibili
-- Xiaohongshu
-- Weibo
-- Weishi
-- Pipix
-- More platforms coming soon...
+```bash
+npm run dev
+```
 
-#### 3. Theme Toggle
-Click the theme icon on the right side of the navbar to switch between light/dark mode
+Visit **http://localhost:5173** after startup
 
-#### 4. Multi-language
-Supports Chinese and English, click the language toggle button in the navbar
+### Production Build
 
-### API Endpoints
+```bash
+npm run build
+```
 
-The project uses backend APIs for video parsing:
+Build output in `dist/` directory
 
-| Platform | API URL |
+### Preview Build
+
+```bash
+npm run preview
+```
+
+---
+
+## 🎯 Features
+
+### 1. 📹 Video Parsing
+
+```
+Paste link → Auto-detect platform → Click parse → Get watermark-free resources
+```
+
+- Paste short video share link
+- Auto-detect platform (manual selection optional)
+- One-click parsing to get watermark-free videos or albums
+
+### 2. 🌐 Supported Platforms
+
+| Platform | API Endpoint | Supported Content | Status |
+|----------|--------------|-------------------|--------|
+| 📱 Douyin | `/api/douyin` | Video, Album, Music | ✅ |
+| 📸 Kuaishou | `/api/ksjx` | Video, Album | ✅ |
+| 📺 Bilibili | `/api/bilibili` | Video | ✅ |
+| 🌸 Xiaohongshu | `/api/xhsjx` | Video, Album, Live Photos | ✅ |
+| 📰 Toutiao | `/api/toutiao` | Video | ✅ |
+| 🔄 Universal | `/api/short_videos` | Auto-detect | ✅ |
+
+### 3. 🎨 Theme Toggle
+
+- 🌞 **Light Mode**: Fresh and bright, suitable for daytime
+- 🌙 **Dark Mode**: Eye-friendly, suitable for nighttime
+- ⏰ **Auto Switch**: Based on system time (light: 6:00-18:00, dark: other times)
+- 👆 **Manual Switch**: Click theme icon in navbar
+
+### 4. 🌍 Multi-language Support
+
+| Language | Code | Switch |
+|----------|------|--------|
+| Chinese | zh-CN | Click language button in navbar |
+| English | en | Click language button in navbar |
+
+### 5. 📥 Download Features
+
+| Feature | Description |
+|---------|-------------|
+| 📦 Single File | Download single video or image |
+| 📁 Batch Download | Pack all resources as ZIP file |
+| 📊 Real-time Progress | Show download progress and speed |
+| ⏸️ Pause/Cancel | Support pause and cancel download tasks |
+
+---
+
+## 🧩 Core Modules
+
+### 1. State Management (Pinia)
+
+`src/stores/video.js` manages global state:
+
+| State | Type | Description |
+|-------|------|-------------|
+| `resultData` | Object | Parsing result data |
+| `toasts` | Array | Toast notifications list |
+| `downloads` | Array | Download tasks list |
+| `showProgress` | Boolean | Progress modal state |
+
+### 2. Composables
+
+**useButtonControl** - Button control composable:
+
+| Feature | Description |
+|---------|-------------|
+| ⚡ Throttle | Prevent frequent clicks |
+| 🔒 Anti-replay | Prevent duplicate requests |
+| ⏱️ Timeout | Auto timeout handling |
+| 🔄 Retry | Auto retry on failure |
+
+### 3. Utility Functions
+
+| Function | Feature |
 |----------|---------|
-| All Platforms | `https://api.bugpk.com/api/short_videos` |
-| Douyin | `https://api.bugpk.com/api/douyin` |
-| Kuaishou | `https://api.bugpk.com/api/ksjx` |
-| Bilibili | `https://api.bugpk.com/api/bilibili` |
-| Xiaohongshu | `https://api.bugpk.com/api/xhsjx` |
-| Toutiao | `https://api.bugpk.com/api/toutiao` |
+| `antiReplay` | Anti-replay protection (timestamp validation, signature generation) |
+| `rateLimit` | Rate limiting (request counting, rate limiting strategy) |
 
-### Page Structure
+---
 
-```
-index.html
-├── Header
-│   ├── Logo & Brand
-│   ├── Navigation Links
-│   ├── Theme Toggle
-│   └── Language Toggle
-├── Hero Section
-│   ├── Title & Description
-│   ├── Feature Highlights
-│   └── Input & Parse Button
-├── Result Section
-├── Platform Grid
-├── Tutorial Section
-├── FAQ Section
-└── Footer
+## 🔌 API Endpoints
+
+### Basic Request
+
+```http
+GET /api/short_videos?url={video_url}
 ```
 
-### Theme Customization
+### Response Format
 
-The project uses CSS variables for theming. Modify the `:root` in `index.html`:
-
-```css
-:root {
-    --color-primary: #6366f1;      /* Primary */
-    --color-secondary: #8b5cf6;     /* Secondary */
-    --color-accent: #ec4899;       /* Accent */
-    /* ... */
+```json
+{
+  "code": 200,
+  "msg": "success",
+  "data": {
+    "title": "Video Title",
+    "url": "Watermark-free video URL",
+    "cover": "Cover image",
+    "images": ["image1", "image2"],
+    "music": {
+      "name": "Background music name",
+      "url": "Music URL"
+    },
+    "live_photo": [
+      { "image": "Cover", "video": "Video" }
+    ],
+    "video_backup": [
+      { "url": "Backup video URL", "label": "Backup source" }
+    ]
+  }
 }
 ```
 
-### Browser Compatibility
+---
 
-| Browser | Minimum Version |
-|---------|-----------------|
-| Chrome | 80+ |
-| Firefox | 75+ |
-| Safari | 13+ |
-| Edge | 80+ |
+## 🏗️ Component Architecture
 
-### Development Guide
-
-#### Adding a New Platform
-
-1. Add platform info to `SUPPORTED_PLATFORMS` array in `main.js`:
-   ```javascript
-   { name: 'New Platform', url: 'https://example.com', desc: 'Description', gradient: 'from-blue-500 to-cyan-400', img: 'iconURL' }
-   ```
-
-2. Add API mapping in `PLATFORM_API_MAP` if needed
-
-3. Update `PLATFORM_TABS` to add platform switch button
-
-#### Adding a New Language
-
-Add translations in the `LANG` object in `main.js`:
-
-```javascript
-var LANG = {
-    'zh-CN': { /* Chinese translations */ },
-    'en': { /* English translations */ },
-    'new-lang-code': { /* New language translations */ }
-};
+```
+App.vue (Root)
+├── ParticlesCanvas (Particle background)
+├── ToastContainer (Global notifications)
+├── ProgressModal (Progress modal)
+├── DownloadCard (Download card)
+├── HeaderNav (Navbar)
+├── main (Main content)
+│   ├── HeroSection (Hero banner)
+│   ├── ResultSection (Parsing result)
+│   ├── PlatformGrid (Platform showcase)
+│   ├── TutorialSection (Tutorial)
+│   └── FaqSection (FAQ)
+└── FooterSection (Footer)
 ```
 
-### License
+---
 
-This project is open source under the MIT License. Welcome to Star and contribute!
+## ⚙️ Configuration
 
-### Contact
+### Vite Configuration (`vite.config.js`)
 
-- Author: BugPk & JH-Ahua
-- Email: admin@bugpk.com
-- Blog: https://www.jiuhunwl.cn
-- GitHub: https://github.com/jiuhunwl/shortvideo-html
+```javascript
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+
+export default defineConfig({
+  plugins: [vue()],
+  resolve: {
+    alias: {
+      '@': '/src'  // Path alias
+    }
+  }
+})
+```
+
+### Tailwind Configuration (`tailwind.config.js`)
+
+Supports dark mode and custom theme colors. See file for details.
+
+---
+
+## 🌐 Browser Compatibility
+
+| Browser | Minimum Version | Status |
+|---------|-----------------|--------|
+| Chrome | 80+ | ✅ Supported |
+| Firefox | 75+ | ✅ Supported |
+| Safari | 13+ | ✅ Supported |
+| Edge | 80+ | ✅ Supported |
+
+---
+
+## 📝 Development Guide
+
+### Adding a New Platform
+
+1. Add API mapping in `PLATFORM_API_MAP` in `src/App.vue`
+2. Add platform options in components
+3. Update internationalization translations
+
+### Adding a New Language
+
+1. Add translation object in `src/composables/useI18n.js`
+2. Update language toggle button in `HeaderNav.vue`
+
+### Code Standards
+
+| Standard | Description |
+|----------|-------------|
+| Framework | Use Vue 3 Composition API |
+| Linting | Use ESLint for code style checking |
+| Component Naming | PascalCase (e.g., HeaderNav.vue) |
+| File Naming | kebab-case (e.g., use-button-control.js) |
+
+---
+
+## 🚀 Deployment
+
+### Static Deployment
+
+Deploy `dist/` directory to any static file server:
+
+| Platform | Description |
+|----------|-------------|
+| Nginx | High-performance web server |
+| Apache | Popular web server |
+| Netlify | Cloud static hosting |
+| Vercel | Cloud static hosting |
+| GitHub Pages | GitHub static page hosting |
+
+### Nginx Configuration Example
+
+```nginx
+server {
+  listen 80;
+  server_name your-domain.com;
+  root /path/to/dist;
+  index index.html;
+  
+  location / {
+    try_files $uri $uri/ /index.html;
+  }
+}
+```
+
+---
+
+## 📄 License
+
+This project is open source under the **MIT License**. Welcome to Star and contribute!
+
+```
+MIT License
+
+Copyright (c) 2024 BugPk & JH-Ahua
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files...
+```
+
+---
+
+## 📞 Contact
+
+| Method | Information |
+|--------|-------------|
+| 👤 Author | BugPk & JH-Ahua |
+| 📧 Email | admin@bugpk.com |
+| 🌐 Blog | https://www.jiuhunwl.cn |
+| 🐙 GitHub | https://github.com/jiuhunwl/shortvideo-html |
+
+---
+
+## ⭐ Star History
+
+[![Star History Chart](https://api.star-history.com/chart?repos=jiuhunwl/shortvideo-html&type=date&legend=top-left)](https://www.star-history.com/?repos=jiuhunwl%2Fshortvideo-html&type=date&legend=top-left)
+
+---
+
+> 💝 If this project helps you, please give it a ⭐ Star!
