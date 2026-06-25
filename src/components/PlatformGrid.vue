@@ -1,9 +1,21 @@
 <script setup>
+import { ref } from 'vue'
+
 defineProps({
   locale: String
 })
 
 defineEmits(['platform-click'])
+
+const isPaused = ref(false)
+
+const handleTouchStart = () => {
+  isPaused.value = true
+}
+
+const handleTouchEnd = () => {
+  isPaused.value = false
+}
 
 const content = {
   'zh-CN': {
@@ -85,8 +97,16 @@ const duplicatedPlatforms = [...allPlatforms, ...allPlatforms]
       <div class="marquee-fade-left"></div>
       <div class="marquee-fade-right"></div>
 
-      <div class="marquee-container">
-        <div class="marquee-content">
+      <div 
+        class="marquee-container"
+        @touchstart="handleTouchStart"
+        @touchend="handleTouchEnd"
+        @touchcancel="handleTouchEnd"
+      >
+        <div 
+          class="marquee-content"
+          :class="{ 'marquee-paused': isPaused }"
+        >
           <a
             v-for="(platform, idx) in duplicatedPlatforms"
             :key="`platform-${idx}`"
@@ -185,19 +205,35 @@ const duplicatedPlatforms = [...allPlatforms, ...allPlatforms]
   display: flex;
   gap: 1.25rem;
   animation: marquee 50s linear infinite;
+  -webkit-animation: marquee 50s linear infinite;
   width: max-content;
+  will-change: transform;
+  backface-visibility: hidden;
 }
 
-.marquee-content:hover {
+.marquee-content:hover,
+.marquee-content.marquee-paused {
   animation-play-state: paused;
+  -webkit-animation-play-state: paused;
 }
 
 @keyframes marquee {
   0% {
     transform: translateX(0);
+    -webkit-transform: translateX(0);
   }
   100% {
     transform: translateX(-50%);
+    -webkit-transform: translateX(-50%);
+  }
+}
+
+@-webkit-keyframes marquee {
+  0% {
+    -webkit-transform: translateX(0);
+  }
+  100% {
+    -webkit-transform: translateX(-50%);
   }
 }
 
@@ -350,6 +386,15 @@ const duplicatedPlatforms = [...allPlatforms, ...allPlatforms]
 
   .platform-card {
     transition: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) and (max-width: 768px) {
+  .marquee-content {
+    animation: marquee 50s linear infinite;
+    -webkit-animation: marquee 50s linear infinite;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
   }
 }
 

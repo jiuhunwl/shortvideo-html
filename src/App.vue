@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, onMounted, nextTick, watch } from 'vue'
 import JSZip from 'jszip'
 import { useVideoStore } from './stores/video'
 import HeaderNav from './components/HeaderNav.vue'
@@ -14,10 +14,7 @@ import ToastContainer from './components/ToastContainer.vue'
 import ProgressModal from './components/ProgressModal.vue'
 import ParticlesCanvas from './components/ParticlesCanvas.vue'
 import DownloadCard from './components/DownloadCard.vue'
-import { useButtonControl, ButtonState } from './composables/useButtonControl'
-import { antiReplayInstance } from './utils/antiReplay'
-import { operationLogger } from './services/operationLogger'
-import { retryManager } from './services/retryManager'
+import { useButtonControl } from './composables/useButtonControl'
 
 const videoStore = useVideoStore()
 const isDark = ref(false)
@@ -27,20 +24,18 @@ const parseButton = useButtonControl({
   throttleDelay: 1000,
   antiReplay: true,
   timeout: 60000,
-  retry: true,
-  retryOptions: {
-    maxRetries: 2,
-    baseDelay: 2000
-  }
+  retry: false
 })
 
 const isLoading = ref(false)
 const isDownloading = ref(false)
 const showBackup = ref(false)
 const inputUrl = ref('')
+const parseError = ref('')
 const currentPlatform = ref('all')
 const locale = ref(localStorage.getItem('lang') || (navigator.language.toLowerCase().startsWith('zh') ? 'zh-CN' : 'en'))
 const currentVideoUrl = ref('')
+const PARSE_TIMEOUT_MS = 55000
 
 const MD5 = (str) => {
   const rotateLeft = (val, bits) => (val << bits) | (val >>> (32 - bits))
@@ -143,11 +138,154 @@ const preloadMedia = async (resultData) => {
 const extractFirstHttpUrl = (text) => {
   if (!text) return null
   const match = text.match(/\bhttps?:\/\/[^\s<>"{}|\\^`\[\]]+/i)
-  return match ? match[0] : null
+  return match ? match[0].replace(/[),.;!?，。；！？]+$/, '') : null
 }
 
-const showToast = (message, type = 'success') => {
-  videoStore.addToast(message, type)
+const showToast = (message, type = 'success', duration = 3000) => {
+  videoStore.addToast(message, type, duration)
+}
+
+class ParseError extends Error {
+  constructor(message, options = {}) {
+    super(message)
+    this.name = 'ParseError'
+    this.code = options.code
+    this.status = options.status
+    this.response = options.response
+  }
+}
+
+const getApiMessage = (payload) => {
+  if (!payload || typeof payload !== 'object') return ''
+  const candidates = [
+    payload.msg,
+    payload.message,
+    payload.error,
+    payload.errmsg,
+    payload.reason,
+    payload.data?.msg,
+    payload.data?.message,
+    payload.data?.error
+  ]
+  return candidates.find(item => typeof item === 'string' && item.trim())?.trim() || ''
+}
+
+const inferMediaType = (data) => {
+  if (Array.isArray(data.live_photo) && data.live_photo.length > 0) return 'live'
+  if (Array.isArray(data.images) && data.images.length > 0 && !data.url) return 'image'
+  return 'video'
+}
+
+const hasUsableResource = (data) => {
+  if (!data || typeof data !== 'object' || Array.isArray(data)) return false
+  const hasMainUrl = typeof data.url === 'string' && data.url.trim().length > 0
+  const hasImages = Array.isArray(data.images) && data.images.some(Boolean)
+  const hasLivePhotos = Array.isArray(data.live_photo) && data.live_photo.some(item => item?.image || item?.video)
+  const hasBackup = Array.isArray(data.video_backup) && data.video_backup.some(item => item?.url)
+  const hasMusic = typeof data.music?.url === 'string' && data.music.url.trim().length > 0
+  return hasMainUrl || hasImages || hasLivePhotos || hasBackup || hasMusic
+}
+
+const normalizeResultData = (rawData) => {
+  const data = Array.isArray(rawData) ? rawData[0] : rawData
+  if (!data || typeof data !== 'object') {
+    throw new ParseError('解析接口没有返回有效数据')
+  }
+  if (!hasUsableResource(data)) {
+    throw new ParseError('解析完成，但没有找到可用的视频、图片或音乐资源')
+  }
+
+  return {
+    ...data,
+    type: data.type || inferMediaType(data),
+    title: data.title || data.desc || '',
+    desc: data.desc || data.title || '',
+    author: data.author || {},
+    cover: data.cover || data.images?.[0] || '',
+    url: data.url || null,
+    quality: data.quality || '',
+    duration: data.duration ?? null,
+    images: Array.isArray(data.images) ? data.images.filter(Boolean) : [],
+    live_photo: Array.isArray(data.live_photo) ? data.live_photo : [],
+    video_backup: Array.isArray(data.video_backup) ? data.video_backup.filter(item => item?.url) : [],
+    music: data.music && typeof data.music === 'object' ? data.music : {},
+    extra: data.extra && typeof data.extra === 'object' ? data.extra : {}
+  }
+}
+
+const normalizeParserResponse = (payload) => {
+  if (!payload || typeof payload !== 'object') {
+    throw new ParseError('接口返回为空，请稍后重试')
+  }
+
+  const rawCode = payload.code ?? payload.status ?? payload.errCode
+  const numericCode = Number(rawCode)
+  const hasExplicitCode = rawCode !== undefined && rawCode !== null && rawCode !== ''
+  const isSuccess = hasExplicitCode
+    ? numericCode === 200 || rawCode === 'success' || rawCode === true
+    : Boolean(payload.data || payload.url || payload.images || payload.live_photo)
+
+  if (!isSuccess) {
+    const message = getApiMessage(payload) || (numericCode === 404
+      ? '作品不存在、已删除或暂时无法访问'
+      : numericCode === 400
+        ? '链接格式不正确或缺少必要参数'
+        : '解析失败，请稍后重试')
+    throw new ParseError(message, { code: rawCode, response: payload })
+  }
+
+  return normalizeResultData(payload.data ?? payload.result ?? payload)
+}
+
+const fetchJsonWithTimeout = async (requestUrl, timeoutMs = PARSE_TIMEOUT_MS) => {
+  const controller = new AbortController()
+  const timeoutId = window.setTimeout(() => controller.abort(), timeoutMs)
+
+  try {
+    const response = await fetch(requestUrl, {
+      method: 'GET',
+      signal: controller.signal,
+      headers: { Accept: 'application/json' }
+    })
+
+    let data = null
+    try {
+      data = await response.json()
+    } catch (e) {
+      if (!response.ok) {
+        throw new ParseError(`接口请求失败（HTTP ${response.status}）`, { status: response.status })
+      }
+      throw new ParseError('接口返回格式异常，请稍后再试')
+    }
+
+    if (!response.ok) {
+      throw new ParseError(getApiMessage(data) || `接口请求失败（HTTP ${response.status}）`, {
+        status: response.status,
+        response: data
+      })
+    }
+
+    return data
+  } catch (e) {
+    if (e.name === 'AbortError') {
+      throw new ParseError('请求超时，请稍后重试或切换平台接口', { code: 'timeout' })
+    }
+    if (e instanceof ParseError) {
+      throw e
+    }
+    if (e instanceof TypeError) {
+      throw new ParseError('网络连接失败，请检查网络后重试')
+    }
+    throw e
+  } finally {
+    window.clearTimeout(timeoutId)
+  }
+}
+
+const getFriendlyParseError = (error) => {
+  if (!error) return '解析失败，请稍后重试'
+  if (typeof error === 'string') return error
+  return error.message || '解析失败，请稍后重试'
 }
 
 const copyUrl = async (url) => {
@@ -164,42 +302,45 @@ const copyUrl = async (url) => {
 }
 
 const parseVideo = async () => {
+  parseError.value = ''
   const extractedUrl = extractFirstHttpUrl(inputUrl.value)
   if (extractedUrl) {
     inputUrl.value = extractedUrl
   }
   const url = extractedUrl || inputUrl.value
   if (!url || !url.startsWith('http')) {
-    showToast('请输入视频链接', 'warning')
+    const message = '请输入有效的视频分享链接'
+    parseError.value = message
+    showToast(message, 'warning', 4000)
     return
   }
 
   const result = await parseButton.execute(async () => {
     videoStore.clearResult()
+    currentVideoUrl.value = ''
+    showBackup.value = false
 
     const apiUrl = PLATFORM_API_MAP[currentPlatform.value] || PLATFORM_API_MAP.all
-    const response = await fetch(`${apiUrl}?url=${encodeURIComponent(url)}`)
-    const data = await response.json()
+    const data = await fetchJsonWithTimeout(`${apiUrl}?url=${encodeURIComponent(url)}`)
+    const resultData = normalizeParserResponse(data)
 
-    if (data.code === 200 && data.data) {
-      videoStore.setResult(data.data)
-      await nextTick()
-      try {
-        videoStore.initSwiper()
-      } catch (e) {
-        console.warn('Swiper初始化失败:', e)
-      }
-      return data
-    } else {
-      throw new Error(data.msg || '解析失败')
+    videoStore.setResult(resultData)
+    await nextTick()
+    try {
+      videoStore.initSwiper()
+    } catch (e) {
+      console.warn('Swiper初始化失败:', e)
     }
-  })
+    return resultData
+  }, { disableRetry: true, disableTimeout: true })
 
   if (!result) {
-    const errorMsg = parseButton.error.value?.message
-    if (errorMsg && errorMsg !== '请求超时') {
-      showToast(errorMsg)
-    }
+    const errorMsg = getFriendlyParseError(parseButton.error.value)
+    parseError.value = errorMsg
+    showToast(errorMsg, 'error', 6000)
+  } else {
+    parseError.value = ''
+    showToast('解析成功', 'success', 2200)
   }
 }
 
@@ -572,7 +713,14 @@ const setLocale = (lang) => {
 
 const selectPlatform = (key) => {
   currentPlatform.value = key
+  parseError.value = ''
 }
+
+watch(inputUrl, () => {
+  if (parseError.value) {
+    parseError.value = ''
+  }
+})
 
 onMounted(() => {
   const savedTheme = localStorage.getItem('theme')
@@ -610,7 +758,8 @@ onMounted(() => {
       <HeroSection
         v-model:input-url="inputUrl"
         :is-loading="parseButton.isLoading.value"
-        :is-error="parseButton.state.value === 'error'"
+        :is-error="!!parseError || parseButton.state.value === 'error'"
+        :parse-error="parseError"
         :locale="locale"
         :current-platform="currentPlatform"
         @parse="parseVideo"

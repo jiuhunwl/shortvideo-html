@@ -5,6 +5,7 @@ const props = defineProps({
   inputUrl: String,
   isLoading: Boolean,
   isError: Boolean,
+  parseError: String,
   locale: String,
   currentPlatform: String
 })
@@ -26,6 +27,8 @@ const content = {
     button: '开始解析',
     loading: '正在解析…',
     error: '解析失败',
+    errorTitle: '解析没有完成',
+    errorHint: '请检查作品是否公开可访问，或切换平台后再试一次。',
     features: [
       { icon: 'fa-check-circle', color: 'text-emerald-500', label: '无水印' },
       { icon: 'fa-bolt', color: 'text-amber-500', label: '高速解析' },
@@ -46,6 +49,8 @@ const content = {
     button: 'Start Parsing',
     loading: 'Parsing…',
     error: 'Failed',
+    errorTitle: 'Parsing did not finish',
+    errorHint: 'Check that the post is public, or switch platform and try again.',
     features: [
       { icon: 'fa-check-circle', color: 'text-emerald-500', label: 'No Watermark' },
       { icon: 'fa-bolt', color: 'text-amber-500', label: 'Fast Parse' },
@@ -56,10 +61,7 @@ const content = {
 
 const getContent = (locale) => content[locale] || content['zh-CN']
 
-const buttonClass = computed(() => {
-  if (this?.isLoading) return 'opacity-70 cursor-not-allowed'
-  return ''
-})
+const hasParseError = computed(() => Boolean(props.parseError))
 
 const platformTabs = {
   'zh-CN': [
@@ -164,6 +166,24 @@ const selectPlatform = (key) => {
             </button>
           </div>
         </div>
+
+        <Transition name="parse-error">
+          <div
+            v-if="hasParseError"
+            class="parse-error-panel"
+            role="alert"
+            aria-live="assertive"
+          >
+            <div class="parse-error-icon">
+              <i class="fas fa-circle-exclamation"></i>
+            </div>
+            <div class="parse-error-copy">
+              <p class="parse-error-title">{{ getContent(locale).errorTitle }}</p>
+              <p class="parse-error-message">{{ parseError }}</p>
+              <p class="parse-error-hint">{{ getContent(locale).errorHint }}</p>
+            </div>
+          </div>
+        </Transition>
 
         <p class="text-xs text-slate-400 dark:text-slate-500 mt-3 px-2">
           <i class="fas fa-info-circle mr-1"></i>
@@ -325,10 +345,93 @@ const selectPlatform = (key) => {
   transition-duration: 0.1s;
 }
 
+.parse-error-panel {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-top: 0.875rem;
+  padding: 0.875rem 1rem;
+  border: 1px solid rgba(244, 63, 94, 0.24);
+  border-radius: 1rem;
+  background: rgba(255, 241, 242, 0.92);
+  color: #881337;
+  text-align: left;
+  box-shadow: 0 14px 32px rgba(225, 29, 72, 0.1);
+}
+
+:global(.dark) .parse-error-panel {
+  border-color: rgba(251, 113, 133, 0.26);
+  background: rgba(76, 5, 25, 0.56);
+  color: #fecdd3;
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.22);
+}
+
+.parse-error-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  flex: 0 0 2rem;
+  border-radius: 999px;
+  background: rgba(244, 63, 94, 0.12);
+  color: #e11d48;
+}
+
+:global(.dark) .parse-error-icon {
+  background: rgba(251, 113, 133, 0.16);
+  color: #fb7185;
+}
+
+.parse-error-copy {
+  min-width: 0;
+}
+
+.parse-error-title {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.parse-error-message {
+  margin: 0.25rem 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+.parse-error-hint {
+  margin: 0.375rem 0 0;
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: rgba(136, 19, 55, 0.72);
+}
+
+:global(.dark) .parse-error-hint {
+  color: rgba(254, 205, 211, 0.72);
+}
+
+.parse-error-enter-active,
+.parse-error-leave-active {
+  transition: opacity 0.22s ease, transform 0.22s ease;
+}
+
+.parse-error-enter-from,
+.parse-error-leave-to {
+  opacity: 0;
+  transform: translateY(-6px);
+}
+
 @media (max-width: 480px) {
   .enterprise-btn {
     padding-left: 0.875rem;
     padding-right: 0.875rem;
+  }
+
+  .parse-error-panel {
+    border-radius: 0.875rem;
+    padding: 0.75rem;
   }
 }
 </style>

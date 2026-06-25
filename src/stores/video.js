@@ -21,11 +21,16 @@ export const useVideoStore = defineStore('video', () => {
   }
 
   const addToast = (message, type = 'success', duration = 3000) => {
-    const id = Date.now()
+    if (!message) return null
+
+    const id = `${Date.now()}-${Math.random()}`
+    const safeDuration = Number.isFinite(duration) && duration > 0 ? duration : 3000
+    toasts.value = toasts.value.filter(t => !(t.message === message && t.type === type))
     toasts.value.push({ id, message, type })
     setTimeout(() => {
       toasts.value = toasts.value.filter(t => t.id !== id)
-    }, duration)
+    }, safeDuration)
+    return id
   }
 
   const removeToast = (id) => {
