@@ -1,8 +1,9 @@
-# 🎬 BK-SV v3.0 短视频去水印解析工具
+# 🎬 BK-SV v4.1 短视频去水印解析工具
 
 [![GitHub Stars](https://img.shields.io/github/stars/jiuhunwl/shortvideo-html?style=social)](https://github.com/jiuhunwl/shortvideo-html)
 [![License](https://img.shields.io/github/license/jiuhunwl/shortvideo-html)](https://github.com/jiuhunwl/shortvideo-html/blob/main/LICENSE)
-[![Version](https://img.shields.io/badge/version-3.0-blue)](https://github.com/jiuhunwl/shortvideo-html)
+[![Version](https://img.shields.io/badge/version-4.1-blue)](https://github.com/jiuhunwl/shortvideo-html)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178c6?logo=typescript)](https://www.typescriptlang.org/)
 
 [English](README_en.md) | [中文](#项目简介)
 
@@ -29,9 +30,9 @@
 
 ## 🌟 项目简介
 
-BK-SV v3.0 是一款简洁高效的在线短视频去水印解析工具，支持抖音、快手、B站、小红书等多个主流平台的一键无水印视频及图集解析。
+BK-SV v4.1 是一款简洁高效的在线短视频去水印解析工具，支持抖音、快手、B站、小红书等多个主流平台的一键无水印视频及图集解析。
 
-> 💡 **项目亮点**：该项目已使用 **Vue 3** 框架进行全面重构，采用现代化的前端技术栈，提供更好的性能和开发体验。
+> 💡 **项目亮点**：该项目已使用 **Vue 3 + TypeScript** 进行全面重构，采用现代化的前端技术栈，提供完整的类型安全、更好的性能和开发体验。
 
 ### ✨ 核心特点
 
@@ -55,13 +56,17 @@ BK-SV v3.0 是一款简洁高效的在线短视频去水印解析工具，支持
 
 | 分类 | 技术 | 版本 | 说明 |
 |------|------|------|------|
-| 前端框架 | <img src="https://img.shields.io/badge/Vue.js-3.x-green?logo=vue.js"/> | 3.x | 渐进式 JavaScript 框架 |
-| 构建工具 | <img src="https://img.shields.io/badge/Vite-6.x-purple?logo=vite"/> | 6.x | 下一代前端构建工具 |
+| 前端框架 | <img src="https://img.shields.io/badge/Vue.js-3.x-green?logo=vue.js"/> | 3.4+ | 渐进式 JavaScript 框架 |
+| 开发语言 | <img src="https://img.shields.io/badge/TypeScript-5.x-3178c6?logo=typescript"/> | 5.9+ | 带类型系统的 JavaScript 超集 |
+| 构建工具 | <img src="https://img.shields.io/badge/Vite-5.x-purple?logo=vite"/> | 5.x | 下一代前端构建工具 |
+| 类型检查 | <img src="https://img.shields.io/badge/vue--tsc-3.x-3178c6"/> | 3.x | Vue SFC 类型检查器 |
 | 状态管理 | <img src="https://img.shields.io/badge/Pinia-2.x-blue?logo=pinia"/> | 2.x | Vue 官方状态管理库 |
 | 路由管理 | <img src="https://img.shields.io/badge/Vue_Router-4.x-orange?logo=vue.js"/> | 4.x | Vue 官方路由管理器 |
 | 样式框架 | <img src="https://img.shields.io/badge/Tailwind_CSS-3.x-cyan?logo=tailwind-css"/> | 3.x | 实用优先的 CSS 框架 |
 | 图标库 | <img src="https://img.shields.io/badge/Font_Awesome-6.x-red?logo=font-awesome"/> | 6.x | 流行的图标库 |
 | 压缩库 | <img src="https://img.shields.io/badge/JSZip-3.x-yellow"/> | 3.x | 用于打包下载资源 |
+
+> 📘 **技术栈升级说明**：自 v4.0 起项目由 JavaScript 迁移至 TypeScript，核心逻辑（视频解析、下载调度、状态管理、类型契约）均已类型化，并新增 HLS 分片合并下载能力。
 
 ---
 
@@ -70,12 +75,13 @@ BK-SV v3.0 是一款简洁高效的在线短视频去水印解析工具，支持
 ```
 shortvideo-html/                              # 项目根目录
 ├── src/                                      # 源代码目录
-│   ├── components/                           # Vue 组件（12个）
+│   ├── components/                           # Vue 组件（13个）
 │   │   ├── HeaderNav.vue                     # 顶部导航栏
 │   │   ├── HeroSection.vue                   # 主横幅区域
 │   │   ├── PlatformTabs.vue                  # 平台选择标签
 │   │   ├── PlatformGrid.vue                  # 支持平台展示
 │   │   ├── ResultSection.vue                 # 解析结果展示
+│   │   ├── VideoPlaylist.vue                 # 多集/合集选集列表
 │   │   ├── TutorialSection.vue               # 使用教程
 │   │   ├── FaqSection.vue                    # 常见问题
 │   │   ├── FooterSection.vue                 # 页脚
@@ -83,30 +89,43 @@ shortvideo-html/                              # 项目根目录
 │   │   ├── ProgressModal.vue                 # 进度弹窗
 │   │   ├── DownloadCard.vue                  # 下载卡片
 │   │   └── ParticlesCanvas.vue               # 粒子背景动画
-│   ├── composables/                          # 组合式函数（3个）
+│   ├── composables/                          # 组合式函数（6个）
+│   │   ├── useVideoParser.ts                 # 视频解析与数据归一化
+│   │   ├── useMediaDownload.ts               # 下载调度（单文件/分片合并）
+│   │   ├── useVideoSelection.ts              # 选集状态（多P/合集）
 │   │   ├── useButtonControl.js               # 按钮控制（防抖、重试、超时）
 │   │   ├── useI18n.js                        # 国际化支持
 │   │   └── useRequestTimeout.js              # 请求超时处理
 │   ├── stores/                               # Pinia 状态管理（1个）
-│   │   └── video.js                          # 视频解析状态
-│   ├── services/                             # 服务层（2个）
+│   │   └── video.ts                          # 视频解析状态
+│   ├── services/                             # 服务层（3个）
+│   │   ├── secureApiClient.ts                # 安全 API 客户端
 │   │   ├── operationLogger.js                # 操作日志记录
 │   │   └── retryManager.js                   # 请求重试管理
-│   ├── utils/                                # 工具函数（2个）
+│   ├── utils/                                # 工具函数（5个）
+│   │   ├── segmentDownload.ts                # HLS 分片解析与合并下载
+│   │   ├── downloadFilename.ts               # 下载文件名生成
+│   │   ├── videoFilename.ts                  # 视频文件名处理
 │   │   ├── antiReplay.js                     # 防重放攻击
 │   │   └── rateLimit.js                      # 请求频率限制
+│   ├── types/                                # TypeScript 类型定义（3个）
+│   │   ├── media.ts                          # 媒体数据契约（视频/合集）
+│   │   ├── api.ts                            # API 请求响应类型
+│   │   └── global.d.ts                       # 全局类型声明
 │   ├── router/                               # 路由配置（1个）
 │   │   └── index.js                          # 路由定义
 │   ├── assets/                               # 静态资源
 │   │   └── design-system.css                 # 设计系统样式
 │   ├── App.vue                               # 根组件
-│   ├── main.js                               # 应用入口
+│   ├── main.ts                               # 应用入口
 │   └── style.css                             # 全局样式
 ├── dist/                                     # 构建产物（npm run build 生成）
 ├── index.html                                # HTML 模板
 ├── vite.config.js                            # Vite 配置
+├── tsconfig.json                             # TypeScript 编译配置
 ├── tailwind.config.js                        # Tailwind CSS 配置
 ├── postcss.config.js                         # PostCSS 配置
+├── .env.example                              # 环境变量模板
 ├── LICENSE                                   # 开源协议
 ├── README.md                                 # 项目文档（中文）
 └── README_en.md                              # 项目文档（英文）
@@ -122,6 +141,7 @@ shortvideo-html/                              # 项目根目录
 |------|----------|------|
 | Node.js | >= 18.0.0 | JavaScript 运行环境 |
 | npm | >= 9.0.0 | 包管理器 |
+| TypeScript | 5.9+ | 由 devDependencies 自动安装 |
 
 ### 安装依赖
 
@@ -143,7 +163,13 @@ npm run dev
 npm run build
 ```
 
-构建产物输出到 `dist/` 目录
+该命令会先执行 `vue-tsc --noEmit` 类型检查，通过后再由 Vite 打包，构建产物输出到 `dist/` 目录。
+
+### 类型检查
+
+```bash
+npm run typecheck
+```
 
 ### 预览构建结果
 
@@ -205,16 +231,42 @@ npm run preview
 
 ### 1. 状态管理 (Pinia)
 
-`src/stores/video.js` 管理全局状态：
+`src/stores/video.ts` 管理全局状态：
 
 | 状态 | 类型 | 说明 |
 |------|------|------|
-| `resultData` | Object | 解析结果数据 |
-| `toasts` | Array | Toast 提示列表 |
-| `downloads` | Array | 下载任务列表 |
-| `showProgress` | Boolean | 进度弹窗状态 |
+| `resultData` | `ParsedMedia \| null` | 解析结果数据 |
+| `toasts` | `Toast[]` | Toast 提示列表 |
+| `downloads` | `DownloadTask[]` | 下载任务列表 |
+| `showProgress` | `boolean` | 进度弹窗状态 |
 
 ### 2. 组合式函数
+
+**useVideoParser** (`src/composables/useVideoParser.ts`) - 解析与数据归一化：
+
+| 功能 | 说明 |
+|------|------|
+| 🧩 多平台解析 | 按平台调用对应 API 并归一化响应 |
+| 🎬 多集/合集识别 | 识别 B 站多 P 与 `ugc_season` 合集结构 |
+| 🖼️ 图集/实况 | 支持图集与 LivePhoto 实况资源 |
+| 🔗 懒解析 | B 站分集按需解析真实直链 |
+
+**useMediaDownload** (`src/composables/useMediaDownload.ts`) - 下载调度：
+
+| 功能 | 说明 |
+|------|------|
+| 📦 单文件下载 | 直接下载完整 mp4 |
+| 🧵 HLS 分片合并 | 清单解析 → 顺序抓取 → 合并为单文件 |
+| 🛡️ 完整性校验 | 比对 `Content-Length`，不完整自动兜底 |
+| ⏸️ 取消/重试 | `AbortSignal` 取消；分片任务重试不退化为单文件 |
+
+**useVideoSelection** (`src/composables/useVideoSelection.ts`) - 选集状态：
+
+| 功能 | 说明 |
+|------|------|
+| 🎞️ 多 P 选集 | 管理分 P 选中索引 |
+| 📚 合集切换 | 管理合集分区与合集内选集 |
+| 📋 批量选择 | 多选集批量下载 |
 
 **useButtonControl** - 按钮控制组合式函数：
 
@@ -229,8 +281,21 @@ npm run preview
 
 | 函数 | 功能 |
 |------|------|
+| `segmentDownload` | HLS 清单解析、分片探测与合并下载 |
+| `downloadFilename` | 下载文件名生成与净化 |
 | `antiReplay` | 防重放攻击（时间戳验证、签名生成） |
 | `rateLimit` | 频率限制（请求计数、限流策略） |
+
+### 4. 类型契约
+
+`src/types/` 定义跨模块的数据契约：
+
+| 类型 | 说明 |
+|------|------|
+| `MediaVideo` | 单个视频/分集条目（含 `segments`、`_cid`、`_epNo` 等） |
+| `MediaCollection` | 合集分区（标题 + 分集列表） |
+| `ParsedMedia` | 归一化后的解析结果 |
+| `PlatformKey` | 平台标识枚举 |
 
 ---
 
@@ -311,6 +376,28 @@ export default defineConfig({
 
 支持深色模式和自定义主题色，具体配置请查看该文件。
 
+### TypeScript 配置 (`tsconfig.json`)
+
+关键编译选项：
+
+| 选项 | 值 | 说明 |
+|------|-----|------|
+| `target` | `ES2022` | 编译目标 |
+| `moduleResolution` | `Bundler` | 适配 Vite 的模块解析 |
+| `strict` | `true` | 开启严格模式 |
+| `allowJs` | `true` | 允许混用既有 `.js` 模块 |
+| `isolatedModules` | `true` | 保证单文件转译安全 |
+
+### 环境变量 (`.env`)
+
+复制 `.env.example` 为 `.env.local` 后按需修改：
+
+```bash
+VITE_API_BASE_URL=http://localhost:8080
+```
+
+> ⚠️ `.env.local` 属本地私有配置，已在 `.gitignore` 中排除，请勿提交。
+
 ---
 
 ## 🌐 浏览器兼容
@@ -328,9 +415,9 @@ export default defineConfig({
 
 ### 添加新平台
 
-1. 在 `src/App.vue` 的 `PLATFORM_API_MAP` 中添加 API 映射
-2. 在组件中添加平台选项
-3. 更新国际化翻译
+1. 在 `src/composables/useVideoParser.ts` 的 `API` 表中添加接口映射
+2. 在 `src/types/api.ts` 的 `PlatformKey` 中登记平台标识
+3. 在组件中添加平台选项并更新国际化翻译
 
 ### 添加新语言
 
@@ -341,10 +428,20 @@ export default defineConfig({
 
 | 规范 | 说明 |
 |------|------|
-| 框架 | 使用 Vue 3 Composition API |
-| 检查 | 使用 ESLint 检查代码风格 |
+| 框架 | 使用 Vue 3 Composition API + `<script setup lang="ts">` |
+| 类型 | 核心逻辑必须标注类型，禁止无必要的 `any` |
+| 类型检查 | 提交前执行 `npm run typecheck` 确保 exit 0 |
 | 组件命名 | PascalCase（如 HeaderNav.vue） |
-| 文件命名 | kebab-case（如 use-button-control.js） |
+| 文件命名 | 组件 PascalCase，模块 kebab-case（如 use-media-download.ts） |
+
+### 常用命令
+
+| 命令 | 说明 |
+|------|------|
+| `npm run dev` | 启动开发服务器 |
+| `npm run build` | 类型检查 + 生产构建 |
+| `npm run typecheck` | 仅执行 `vue-tsc` 类型检查 |
+| `npm run preview` | 本地预览构建产物 |
 
 ---
 

@@ -1,5 +1,6 @@
 <script setup>
-import { computed, ref, onMounted, onUnmounted } from 'vue'
+import { computed, ref, onMounted, onUnmounted, watch } from 'vue'
+import VideoPlaylist from './VideoPlaylist.vue'
 
 const props = defineProps({
   resultData: Object,
@@ -8,13 +9,19 @@ const props = defineProps({
   locale: String,
   formatNumber: Function,
   formatDuration: Function,
-  currentVideoUrl: String
+  currentVideoUrl: String,
+  /** 选集状态（多 P 时可用） */
+  selection: Object
 })
 
 const emit = defineEmits([
   'download-main', 'download-backup', 'download-all', 'download-music',
   'download-live-video', 'download-live-cover', 'download-all-live', 'download-all-live-covers',
-  'copy-url', 'toggle-backup', 'switch-video'
+  'copy-url', 'toggle-backup', 'switch-video',
+  'select-video', 'toggle-video', 'select-all-videos', 'clear-selection',
+  'select-collection',
+  'download-index', 'download-selected', 'download-all-videos',
+  'download-selected-zip', 'download-all-zip'
 ])
 
 // ── computed state ──
@@ -27,8 +34,18 @@ const hasLivePhotos = computed(() => (props.resultData?.live_photo?.length || 0)
 const totalLivePhotos = computed(() => props.resultData?.live_photo?.length || 0)
 const hasBothMedia = computed(() => hasVideo.value && hasImages.value)
 const isImageType = computed(() => props.resultData?.type === 'image')
+const isCollection = computed(() =>
+  ['collection', 'collections', 'season', 'ugc_season'].includes(props.resultData?.type)
+)
 const isVideoType = computed(() => props.resultData?.type === 'video' || (!props.resultData?.type && hasVideo.value))
 const isLiveType = computed(() => props.resultData?.type === 'live')
+// 多集展示条件：视频条目 >1，或存在合集/分集元数据（合集仅回传 1 条时也要展示选集列表）
+const isMulti = computed(
+  () =>
+    (props.resultData?.videos?.length || 0) > 1 ||
+    (props.resultData?.collections?.length || 0) > 0 ||
+    isCollection.value,
+)
 
 const activeImageIndex = ref(0)
 const imageModalOpen = ref(false)
@@ -38,6 +55,51 @@ const activeLiveIndex = ref(0)
 const liveViewMode = ref('video')
 const showCopyToast = ref(false)
 const copyToastText = ref('')
+const videoEl = ref(null)
+
+// 选中集变更 → 播放器 reload 归零
+watch(
+  () => props.selection?.currentVideoUrl?.value,
+  () => {
+    if (videoEl.value) {
+      videoEl.value.currentTime = 0
+      // src 变更后主动 reload，防续播旧进度
+      videoEl.value.load && videoEl.value.load()
+    }
+  }
+)
+
+const currentIndex = computed(() => props.selection?.selectedIndex?.value ?? 0)
+// 选集展示列表：合集时为当前合集的分集，否则为全量 videos
+const visibleVideos = computed(
+  () => props.selection?.visibleList?.value ?? props.resultData?.videos ?? []
+)
+const collections = computed(() => props.selection?.collections?.value ?? [])
+const activeCollection = computed(() => props.selection?.sectionIndex?.value ?? 0)
+const selectedVideoUrl = computed(() => {
+  const item = currentVideoItem.value
+  // 未懒解析出直链的分集：不回退到顶层 url（避免播错集），交给解析遮罩
+  if (item && !item.url && !item.error) return ''
+  return (
+    props.selection?.currentVideoUrl?.value ||
+    props.currentVideoUrl ||
+    props.resultData?.url ||
+    ''
+  )
+})
+const selectedCount = computed(() => props.selection?.selectedCount?.value ?? 0)
+const selectedTotal = computed(() => props.selection?.total?.value ?? props.resultData?.videos?.length ?? 0)
+
+// 当前选中的分集对象（用于解析中/缺链状态判断）
+const currentVideoItem = computed(
+  () => props.selection?.currentVideo?.value ?? visibleVideos.value?.[currentIndex.value] ?? null
+)
+// 该 P/合集分集正在懒解析中（B 站）
+const isResolving = computed(() => !!currentVideoItem.value?._resolving)
+// 当前分集既没有直链也没有顶层 url（等待解析 / 解析失败）
+const noCurrentUrl = computed(
+  () => !!currentVideoItem.value && !currentVideoItem.value.url && !currentVideoItem.value.error
+)
 
 const copyToClipboard = async (text, index = -1) => {
   try {
@@ -85,6 +147,7 @@ const infoCards = computed(() => {
   let typeText = content[props.locale]?.unknownType || '未知'
   const type = data.type || (data.images && data.images.length > 0 ? 'images' : 'video')
   if (['video', 'videos'].includes(type)) typeText = content[props.locale]?.video || '视频'
+  else if (isCollection.value) typeText = content[props.locale]?.collection || '合集'
   else if (['image', 'images', 'normal'].includes(type)) typeText = content[props.locale]?.images || '图片集'
   else if (type === 'live') typeText = content[props.locale]?.live || '实况解析'
   else typeText = data.images && data.images.length > 0 ? (content[props.locale]?.images || '图片集') : (content[props.locale]?.video || '视频')
@@ -130,6 +193,13 @@ const content = {
     downloadSingle: '下载视频',
     downloadLive: '下载实况',
     downloadAll: '下载全部',
+    downloadSelected: '下载选中',
+    downloadAllVideos: '下载全部',
+    downloadSelectedZip: '选中打包ZIP',
+    downloadAllZip: '全部打包ZIP',
+    resolving: '解析中…',
+    episodes: '分集',
+    collections: '合集',
     copyVideo: '复制链接',
     backupTitle: '备用画质',
     unknown: '未知',
@@ -148,6 +218,7 @@ const content = {
     video: '视频',
     images: '图片集',
     live: '实况',
+    collection: '合集',
     unknownType: '未知',
     quality: '画质',
     duration: '时长',
@@ -189,6 +260,13 @@ const content = {
     downloadSingle: 'Download Video',
     downloadLive: 'Download Live',
     downloadAll: 'Download All',
+    downloadSelected: 'Download Selected',
+    downloadAllVideos: 'Download All',
+    downloadSelectedZip: 'Selected as ZIP',
+    downloadAllZip: 'All as ZIP',
+    resolving: 'Resolving…',
+    episodes: 'Episodes',
+    collections: 'Collections',
     copyVideo: 'Copy URL',
     backupTitle: 'Backup Quality',
     unknown: 'Unknown',
@@ -207,6 +285,7 @@ const content = {
     video: 'Video',
     images: 'Album',
     live: 'Live',
+    collection: 'Collection',
     unknownType: 'Unknown',
     quality: 'Quality',
     duration: 'Duration',
@@ -267,6 +346,7 @@ const formatBitrate = (val) => {
 const mediaTypeBadge = computed(() => {
   if (isLiveType.value) return { icon: 'fa-broadcast-tower', text: t(props.locale, 'live'), style: 'live' }
   if (isImageType.value) return { icon: 'fa-images', text: t(props.locale, 'images'), style: 'image' }
+  if (isCollection.value) return { icon: 'fa-layer-group', text: t(props.locale, 'collection'), style: 'video' }
   return { icon: 'fa-play', text: t(props.locale, 'video'), style: 'video' }
 })
 
@@ -366,8 +446,122 @@ const toggleSection = (key) => {
            LEFT COLUMN: Media Content
            ============================================================ -->
       <div class="rs-media-col">
-        <!-- ── VIDEO PLAYER ── -->
-        <div v-if="hasVideo" class="rs-card rs-card--video">
+        <!-- ── MULTI-EPISODE：播放器 + 选集列表 ── -->
+        <template v-if="isMulti">
+          <div class="rs-card rs-card--video">
+            <div class="rs-card-hd">
+              <div class="rs-card-hd-left">
+                <i class="fas fa-play-circle rs-card-icon"></i>
+                <span>{{ t(locale, 'videoSource') }}</span>
+              </div>
+              <span v-if="resultData.quality" class="rs-quality-tag">{{ resultData.quality }}</span>
+            </div>
+            <div class="rs-video-stage">
+              <video
+                ref="videoEl"
+                :src="selectedVideoUrl || resultData.url"
+                controls
+                referrerpolicy="no-referrer"
+                class="rs-video"
+                :poster="resultData.cover || undefined"
+              >
+                <track kind="captions" :src="undefined" />
+              </video>
+              <!-- B 站多 P 解析遮罩 -->
+              <div
+                v-if="isResolving || (noCurrentUrl && !currentVideoItem?.error)"
+                class="rs-stage-overlay"
+              >
+                <div class="rs-stage-spinner"></div>
+                <span>{{ t(locale, 'resolving') }}</span>
+              </div>
+            </div>
+            <div class="rs-card-actions">
+              <button
+                @click="emit('download-index', currentIndex)"
+                class="rs-btn rs-btn--primary"
+                :disabled="isDownloading"
+              >
+                <i class="fas fa-download"></i>
+                <span>{{ t(locale, 'downloadSingle') }}</span>
+              </button>
+              <template v-if="selectedCount > 0">
+                <button
+                  @click="emit('download-selected')"
+                  class="rs-btn rs-btn--accent"
+                  :disabled="isDownloading"
+                >
+                  <i class="fas fa-layer-group"></i>
+                  <span>{{ t(locale, 'downloadSelected') }}（{{ selectedCount }}）</span>
+                </button>
+                <button
+                  @click="emit('download-selected-zip', props.selection?.getBatchVideos?.() ?? [])"
+                  class="rs-btn rs-btn--ghost"
+                  :disabled="isDownloading"
+                >
+                  <i class="fas fa-file-archive"></i>
+                  <span>{{ t(locale, 'downloadSelectedZip') }}</span>
+                </button>
+              </template>
+              <template v-else>
+                <button
+                  @click="emit('download-all-videos')"
+                  class="rs-btn rs-btn--accent"
+                  :disabled="isDownloading"
+                >
+                  <i class="fas fa-download"></i>
+                  <span>{{ t(locale, 'downloadAllVideos') }}</span>
+                </button>
+                <button
+                  @click="emit('download-all-zip', resultData.videos ?? [])"
+                  class="rs-btn rs-btn--ghost"
+                  :disabled="isDownloading"
+                >
+                  <i class="fas fa-file-archive"></i>
+                  <span>{{ t(locale, 'downloadAllZip') }}</span>
+                </button>
+              </template>
+              <button
+                @click="emit('copy-url', selectedVideoUrl)"
+                class="rs-btn rs-btn--ghost-light"
+              >
+                <i class="fas fa-copy"></i>
+                <span>{{ t(locale, 'copyVideo') }}</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="rs-card rs-card--playlist">
+            <div class="rs-card-hd">
+              <div class="rs-card-hd-left">
+                <i class="fas fa-list rs-card-icon"></i>
+                <span>{{ t(locale, 'episodes') }}（{{ visibleVideos.length }}）</span>
+              </div>
+              <span v-if="collections.length > 1" class="rs-count-tag">
+                {{ collections.length }} {{ t(locale, 'collections') }}
+              </span>
+            </div>
+            <div class="rs-playlist">
+              <VideoPlaylist
+                :videos="visibleVideos"
+                :current-index="currentIndex"
+                :selected-set="props.selection?.selectedSet?.value"
+                :total="selectedTotal"
+                :disabled="isDownloading"
+                :collections="collections"
+                :active-collection="activeCollection"
+                @select="emit('select-video', $event)"
+                @toggle="emit('toggle-video', $event)"
+                @select-all="emit('select-all-videos')"
+                @clear-selection="emit('clear-selection')"
+                @select-collection="emit('select-collection', $event)"
+              />
+            </div>
+          </div>
+        </template>
+
+        <!-- ── VIDEO PLAYER（单集）── -->
+        <div v-else-if="hasVideo" class="rs-card rs-card--video">
           <div class="rs-card-hd">
             <div class="rs-card-hd-left">
               <i class="fas fa-play-circle rs-card-icon"></i>
@@ -377,6 +571,7 @@ const toggleSection = (key) => {
           </div>
           <div class="rs-video-stage">
             <video
+              ref="videoEl"
               :src="currentVideoUrl || resultData.url"
               controls
               referrerpolicy="no-referrer"
@@ -399,7 +594,7 @@ const toggleSection = (key) => {
               <i class="fas fa-layer-group"></i>
               <span>{{ t(locale, 'downloadAll') }}</span>
             </button>
-            <button @click="emit('copy-url', currentVideoUrl || resultData.url)" class="rs-btn rs-btn--ghost">
+            <button @click="emit('copy-url', currentVideoUrl || resultData.url)" class="rs-btn rs-btn--ghost-light">
               <i class="fas fa-copy"></i>
               <span>{{ t(locale, 'copyVideo') }}</span>
             </button>
@@ -877,8 +1072,9 @@ const toggleSection = (key) => {
   padding: 1.5rem;
 }
 
-/* dark mode overrides */
-:global(.dark) .rs {
+/* dark mode overrides（注意：不要用 :global(.dark) 前缀——编译器会丢弃 .rs 部分，
+   导致 token 变成 html 全局变量被 .rs 的浅色定义覆盖；普通后代选择器才会编译为 .dark .rs[data-v] */
+.dark .rs {
   --c-bg: #0f172a;
   --c-bg-2: #1e293b;
   --c-bg-3: #334155;
@@ -1144,6 +1340,21 @@ const toggleSection = (key) => {
   opacity: 1;
 }
 
+/* 视频主体卡片：常驻渐变描边 + 柔光，突出当前播放内容 */
+.rs-card--video {
+  background:
+    linear-gradient(var(--c-bg-elevated), var(--c-bg-elevated)) padding-box,
+    linear-gradient(135deg, var(--c-accent), var(--c-accent-2), var(--c-accent-3)) border-box;
+  border: 1.5px solid transparent;
+}
+.rs-card--video::before { opacity: 0; }
+.rs-card--video:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 50px -22px rgba(108, 92, 231, 0.5);
+}
+/* 选集卡片入场动画 */
+.rs-card--playlist { animation: rsFadeIn 0.35s ease; }
+
 .rs-card-hd {
   display: flex;
   align-items: center;
@@ -1206,6 +1417,35 @@ const toggleSection = (key) => {
 .rs-video-stage {
   background: #0a0a14;
   position: relative;
+}
+/* B 站多 P 解析中遮罩 */
+.rs-stage-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.875rem;
+  background: rgba(10, 10, 20, 0.62);
+  backdrop-filter: blur(2px);
+}
+.rs-stage-spinner {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.25);
+  border-top-color: var(--color-primary, #6366f1);
+  animation: rs-spin 0.8s linear infinite;
+}
+@keyframes rs-spin {
+  to { transform: rotate(360deg); }
+}
+.rs-playlist {
+  padding: 1rem 1.125rem;
 }
 .rs-video {
   display: block;
@@ -2031,14 +2271,27 @@ const toggleSection = (key) => {
     0 2px 6px rgba(0,0,0,.12);
 }
 
-/* Ghost Button - Light Style */
+/* Ghost Button - 跟随主题 token（浅色下为浅灰描边，深色下为暗底半透明） */
 .rs-btn--ghost {
+  background: var(--c-bg-3);
+  color: var(--c-fg-2);
+  border: 1px solid var(--c-border);
+}
+.rs-btn--ghost:hover {
+  background: var(--c-bg-2);
+  border-color: var(--c-accent);
+  color: var(--c-fg);
+  transform: translateY(-1px);
+}
+
+/* 深色实底区域（实况轮播操作条）内保持白色玻璃按钮 */
+.rs-live-carousel-actions .rs-btn--ghost {
   background: rgba(255,255,255,.08);
   color: rgba(255,255,255,.85);
   border: 1px solid rgba(255,255,255,.15);
   backdrop-filter: blur(8px);
 }
-.rs-btn--ghost:hover {
+.rs-live-carousel-actions .rs-btn--ghost:hover {
   background: rgba(255,255,255,.15);
   border-color: rgba(255,255,255,.25);
   color: #fff;
@@ -2249,7 +2502,7 @@ const toggleSection = (key) => {
   padding: .75rem 1rem;
   background: var(--c-bg-elevated);
   border-radius: var(--r-lg);
-  box-shadow: var(--s-lg);
+  box-shadow: var(--sh-lg);
   border: 1px solid var(--c-border);
   z-index: 9999;
   min-width: 180px;
@@ -2276,11 +2529,11 @@ const toggleSection = (key) => {
 .rs-copy-toast-title {
   font-size: .75rem;
   font-weight: 600;
-  color: var(--c-fg-1);
+  color: var(--c-fg);
 }
 .rs-copy-toast-text {
   font-size: .65rem;
-  color: var(--c-fg-4);
+  color: var(--c-fg-3);
   max-width: 200px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -2317,15 +2570,5 @@ const toggleSection = (key) => {
   }
 }
 
-/* Dark Mode */
-:global(.dark) .rs-copy-toast {
-  background: var(--c-dark-elevated);
-  border-color: var(--c-dark-border);
-}
-:global(.dark) .rs-copy-toast-title {
-  color: var(--c-dark-fg-1);
-}
-:global(.dark) .rs-copy-toast-text {
-  color: var(--c-dark-fg-4);
-}
+/* Dark Mode：复制 Toast 随 .rs 内 token 自动翻转，无需单独覆盖 */
 </style>

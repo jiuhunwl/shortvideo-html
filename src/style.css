@@ -5,6 +5,25 @@
 :root {
   --primary: #6366f1;
   --primary-dark: #4f46e5;
+  --color-action: var(--primary);
+  --color-action-hover: var(--primary-dark);
+  --color-page: #f8fafc;
+  --color-surface: #ffffff;
+  --color-text: #0f172a;
+  --color-text-muted: #64748b;
+  --color-border: #e2e8f0;
+  --radius-control: 0.75rem;
+  --radius-card: 1rem;
+  --motion-fast: 150ms;
+  --motion-normal: 300ms;
+}
+
+.dark {
+  --color-page: #020617;
+  --color-surface: #1e293b;
+  --color-text: #f8fafc;
+  --color-text-muted: #94a3b8;
+  --color-border: #334155;
 }
 
 .btn-primary-gradient {
@@ -77,4 +96,19 @@
 #app {
   position: relative;
   z-index: 2;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .particle-canvas {
+    display: none;
+  }
 }

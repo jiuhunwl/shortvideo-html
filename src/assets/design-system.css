@@ -51,6 +51,17 @@
   --font-mono: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
 }
 
+/* 深色模式：全局基础 token 整体翻转，引用方无需各自覆盖 */
+.dark {
+  --color-bg-primary: var(--color-bg-dark);
+  --color-bg-secondary: var(--color-bg-dark-secondary);
+  --color-bg-tertiary: var(--color-bg-dark-tertiary);
+  --color-text-primary: var(--color-text-dark-primary);
+  --color-text-secondary: var(--color-text-dark-secondary);
+  --color-text-muted: var(--color-text-dark-muted);
+  --color-border: var(--color-border-dark);
+}
+
 * {
   -webkit-tap-highlight-color: transparent;
 }
