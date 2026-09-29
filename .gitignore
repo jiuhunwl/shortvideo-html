@@ -19,6 +19,8 @@ node_modules/
 *.tsbuildinfo
 .cache/
 *.local
+# vite 加载 vite.config 时生成的临时文件（每次 build 都会新建）
+vite.config.js.timestamp-*
 
 # ============================================================
 # 编辑器 / 系统

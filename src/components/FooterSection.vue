@@ -6,7 +6,7 @@ defineProps({
 const content = {
   'zh-CN': {
     brand: '短视频解析',
-    version: 'BK-SV v3.0',
+    version: 'BK-SV v4.1',
     desc: '简单易用的短视频解析工具，支持多平台无水印视频与图集解析，让分享更自由。',
     quickLinks: '快速链接',
     home: '首页',
@@ -25,7 +25,7 @@ const content = {
   },
   'en': {
     brand: 'Video Parser',
-    version: 'BK-SV v3.0',
+    version: 'BK-SV v4.1',
     desc: 'Simple & easy video parsing tool. Support multi-platform watermark-free video & album extraction.',
     quickLinks: 'Quick Links',
     home: 'Home',

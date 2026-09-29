@@ -5,7 +5,7 @@ const routes = [
     path: '/',
     name: 'Home',
     component: () => import('../App.vue'),
-    meta: { title: 'BK-SV v3.0 短视频去水印解析工具' }
+    meta: { title: 'BK-SV v4.1 短视频去水印解析工具' }
   },
   {
     path: '/:pathMatch(.*)*',

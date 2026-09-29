@@ -14,11 +14,11 @@ const emit = defineEmits(['update:inputUrl', 'parse', 'select-platform'])
 
 const content = {
   'zh-CN': {
-    badge: 'BK-SV v3.0 · 多平台解析',
+    badge: 'BK-SV v4.1 · 多平台解析',
     title1: '轻松解析',
     title2: '任何',
     title3: '短视频',
-    desc: 'v3.0 全新升级！支持抖音、快手、B 站、小红书等平台，一键提取无水印视频与图集，简单免费。',
+    desc: 'v4.1 全新升级！支持抖音、快手、B 站、小红书等平台，一键提取无水印视频与图集，简单免费。',
     feature1: '无水印',
     feature2: '高速解析',
     feature3: '完全免费',
@@ -36,11 +36,11 @@ const content = {
     ]
   },
   'en': {
-    badge: 'BK-SV v3.0 · Multi-Platform',
+    badge: 'BK-SV v4.1 · Multi-Platform',
     title1: 'Parse ',
     title2: 'Any',
     title3: ' Short Video',
-    desc: 'v3.0 Upgrade! Support Douyin, Kuaishou, Bilibili, Xiaohongshu and more. Extract videos & albums without watermark, simple and free.',
+    desc: 'v4.1 Upgrade! Support Douyin, Kuaishou, Bilibili, Xiaohongshu and more. Extract videos & albums without watermark, simple and free.',
     feature1: 'No Watermark',
     feature2: 'Fast Parse',
     feature3: 'Free',
