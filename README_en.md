@@ -5,6 +5,13 @@
 [![Version](https://img.shields.io/badge/version-4.1-blue)](https://github.com/jiuhunwl/shortvideo-html)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178c6?logo=typescript)](https://www.typescriptlang.org/)
 
+**☁️ One-click deploy to:**
+
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/jiuhunwl/shortvideo-html)
+[![Deploy with EdgeOne Pages](https://cdnstatic.tencentcs.com/edgeone/pages/deploy.svg)](https://edgeone.ai/pages/new?repository-url=https%3A%2F%2Fgithub.com%2Fjiuhunwl%2Fshortvideo-html&install-command=npm%20install&build-command=npm%20run%20build&output-directory=dist)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/jiuhunwl/shortvideo-html)
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/jiuhunwl/shortvideo-html)
+
 [中文](README.md) | [English](#project-overview)
 
 ---
@@ -22,7 +29,7 @@
 - [Configuration](#-configuration)
 - [Browser Compatibility](#-browser-compatibility)
 - [Development Guide](#-development-guide)
-- [Deployment](#-deployment)
+- [One-Click Deployment](#-one-click-deployment)
 - [License](#-license)
 - [Contact](#-contact)
 
@@ -125,6 +132,10 @@ shortvideo-html/                              # Project root
 ├── tsconfig.json                             # TypeScript compiler configuration
 ├── tailwind.config.js                        # Tailwind CSS configuration
 ├── postcss.config.js                         # PostCSS configuration
+├── wrangler.jsonc                            # Cloudflare deployment config (with SPA fallback)
+├── edgeone.json                              # EdgeOne Pages deployment config (with SPA fallback)
+├── vercel.json                               # Vercel deployment config (with SPA fallback)
+├── netlify.toml                              # Netlify deployment config (with SPA fallback)
 ├── .env.example                              # Environment variable template
 ├── LICENSE                                   # License
 ├── README.md                                 # Documentation (Chinese)
@@ -445,19 +456,59 @@ VITE_API_BASE_URL=http://localhost:8080
 
 ---
 
-## 🚀 Deployment
+## 🚀 One-Click Deployment
 
-### Static Deployment
+This is a **pure frontend SPA** (Vue 3 + Vite) whose build output is plain static files (`dist/`), so it can be hosted on any static platform at zero cost. Deployment configs are already bundled in the repo — click a button, authorize GitHub, confirm the build settings, and you are live. No server required.
 
-Deploy `dist/` directory to any static file server:
+### ☁️ Deploy Buttons
+
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/jiuhunwl/shortvideo-html)
+[![Deploy with EdgeOne Pages](https://cdnstatic.tencentcs.com/edgeone/pages/deploy.svg)](https://edgeone.ai/pages/new?repository-url=https%3A%2F%2Fgithub.com%2Fjiuhunwl%2Fshortvideo-html&install-command=npm%20install&build-command=npm%20run%20build&output-directory=dist)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/jiuhunwl/shortvideo-html)
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/jiuhunwl/shortvideo-html)
+
+### 📦 Hosting Platform Comparison
+
+| Platform | One-Click | Free Tier | Highlights |
+|----------|:---------:|-----------|------------|
+| [Cloudflare](https://deploy.workers.cloudflare.com/?url=https://github.com/jiuhunwl/shortvideo-html) | ✅ Button | 100k requests/day, unlimited bandwidth | 330+ global locations, built-in SSL and DDoS protection |
+| [EdgeOne Pages](https://edgeone.ai/pages/new?repository-url=https%3A%2F%2Fgithub.com%2Fjiuhunwl%2Fshortvideo-html&install-command=npm%20install&build-command=npm%20run%20build&output-directory=dist) | ✅ Button | Generous free quota, unlimited traffic | Tencent Cloud edge nodes, fast access in Chinese mainland |
+| [Vercel](https://vercel.com/new/clone?repository-url=https://github.com/jiuhunwl/shortvideo-html) | ✅ Button | Hobby plan (free) | Zero-config Vite detection, great preview deployments |
+| [Netlify](https://app.netlify.com/start/deploy?repository=https://github.com/jiuhunwl/shortvideo-html) | ✅ Button | 100GB bandwidth/month | Simple flow, rich plugin ecosystem |
+| GitHub Pages | ⚙️ Manual | Free for public repos | Requires GitHub Actions or a committed `dist/` |
+| Nginx / Apache | 🖥️ Self-hosted | Depends on your server | Full control, ideal for your own server |
+
+### ⚙️ Build Settings
+
+If a platform asks you to fill in build settings manually, use the values below (the repo already ships config files, so most platforms read them automatically):
+
+| Setting | Value |
+|---------|-------|
+| Framework preset | `Vite` |
+| Install command | `npm install` |
+| Build command | `npm run build` |
+| Output directory | `dist` |
+| Node.js version | `>= 18` (`20` or `22` recommended) |
+
+### 📄 Bundled Deployment Configs
+
+| File | Platform | Purpose |
+|------|----------|---------|
+| `wrangler.jsonc` | Cloudflare | Declares build command, output directory, and SPA fallback |
+| `edgeone.json` | EdgeOne Pages | Declares build command, Node version, SPA rewrites, and asset caching |
+| `vercel.json` | Vercel | Declares Vite preset, build output, and route rewrites |
+| `netlify.toml` | Netlify | Declares build command, publish directory, and SPA fallback |
+
+> ℹ️ **About route fallback**: The project uses `vue-router` in `createWebHistory` mode, so the host must fall back unmatched requests to `index.html` when a sub-path is opened or refreshed directly. All configs above already include this rule — no extra setup needed.
+
+### 🖥️ Static Deployment (Own Server)
+
+Upload the `dist/` directory to any static file server:
 
 | Platform | Description |
 |----------|-------------|
 | Nginx | High-performance web server |
 | Apache | Popular web server |
-| Netlify | Cloud static hosting |
-| Vercel | Cloud static hosting |
-| GitHub Pages | GitHub static page hosting |
 
 ### Nginx Configuration Example
 

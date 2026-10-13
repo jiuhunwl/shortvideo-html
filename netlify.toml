@@ -1,0 +1,17 @@
+# ============================================================
+# Netlify 部署配置
+# 一键部署：https://app.netlify.com/start/deploy?repository=https://github.com/jiuhunwl/shortvideo-html
+# ============================================================
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# 项目使用 vue-router history 模式，未命中的路径一律回退到 index.html
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

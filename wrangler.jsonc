@@ -1,0 +1,17 @@
+{
+  // ============================================================
+  // Cloudflare 部署配置（Workers 静态资源 / Pages）
+  // 一键部署：https://deploy.workers.cloudflare.com/?url=https://github.com/jiuhunwl/shortvideo-html
+  // 构建命令与输出目录由 Cloudflare Workers Builds 自动读取
+  // ============================================================
+  "name": "shortvideo-html",
+  "compatibility_date": "2025-09-01",
+  "build": {
+    "command": "npm run build"
+  },
+  "assets": {
+    "directory": "./dist",
+    // 项目使用 vue-router history 模式，未命中的路径一律回退到 index.html
+    "not_found_handling": "single-page-application"
+  }
+}

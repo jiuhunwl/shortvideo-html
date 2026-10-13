@@ -5,6 +5,13 @@
 [![Version](https://img.shields.io/badge/version-4.1-blue)](https://github.com/jiuhunwl/shortvideo-html)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178c6?logo=typescript)](https://www.typescriptlang.org/)
 
+**☁️ 一键部署到：**
+
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/jiuhunwl/shortvideo-html)
+[![Deploy with EdgeOne Pages](https://cdnstatic.tencentcs.com/edgeone/pages/deploy.svg)](https://edgeone.ai/pages/new?repository-url=https%3A%2F%2Fgithub.com%2Fjiuhunwl%2Fshortvideo-html&install-command=npm%20install&build-command=npm%20run%20build&output-directory=dist)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/jiuhunwl/shortvideo-html)
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/jiuhunwl/shortvideo-html)
+
 [English](README_en.md) | [中文](#项目简介)
 
 ---
@@ -22,7 +29,7 @@
 - [配置说明](#-配置说明)
 - [浏览器兼容](#-浏览器兼容)
 - [开发指南](#-开发指南)
-- [部署说明](#-部署说明)
+- [一键部署](#-一键部署)
 - [开源协议](#-开源协议)
 - [联系方式](#-联系方式)
 
@@ -125,6 +132,10 @@ shortvideo-html/                              # 项目根目录
 ├── tsconfig.json                             # TypeScript 编译配置
 ├── tailwind.config.js                        # Tailwind CSS 配置
 ├── postcss.config.js                         # PostCSS 配置
+├── wrangler.jsonc                            # Cloudflare 部署配置（含 SPA 回退）
+├── edgeone.json                              # EdgeOne Pages 部署配置（含 SPA 回退）
+├── vercel.json                               # Vercel 部署配置（含 SPA 回退）
+├── netlify.toml                              # Netlify 部署配置（含 SPA 回退）
 ├── .env.example                              # 环境变量模板
 ├── LICENSE                                   # 开源协议
 ├── README.md                                 # 项目文档（中文）
@@ -445,19 +456,59 @@ VITE_API_BASE_URL=http://localhost:8080
 
 ---
 
-## 🚀 部署说明
+## 🚀 一键部署
 
-### 静态部署
+本项目是**纯前端 SPA**（Vue 3 + Vite），构建产物为纯静态文件（`dist/`），可零成本部署到任意静态托管平台。下列平台均已内置部署配置，点击按钮 → 授权 GitHub → 确认构建参数即可上线，全程无需服务器。
 
-将 `dist/` 目录部署到任意静态文件服务器：
+### ☁️ 一键部署按钮
+
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/jiuhunwl/shortvideo-html)
+[![Deploy with EdgeOne Pages](https://cdnstatic.tencentcs.com/edgeone/pages/deploy.svg)](https://edgeone.ai/pages/new?repository-url=https%3A%2F%2Fgithub.com%2Fjiuhunwl%2Fshortvideo-html&install-command=npm%20install&build-command=npm%20run%20build&output-directory=dist)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/jiuhunwl/shortvideo-html)
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/jiuhunwl/shortvideo-html)
+
+### 📦 托管平台对比
+
+| 平台 | 一键部署 | 免费额度 | 特点 |
+|------|:--------:|----------|------|
+| [Cloudflare](https://deploy.workers.cloudflare.com/?url=https://github.com/jiuhunwl/shortvideo-html) | ✅ 按钮 | 每日 10 万请求 / 不限带宽 | 全球 330+ 节点，自带 SSL 与 DDoS 防护 |
+| [EdgeOne Pages](https://edgeone.ai/pages/new?repository-url=https%3A%2F%2Fgithub.com%2Fjiuhunwl%2Fshortvideo-html&install-command=npm%20install&build-command=npm%20run%20build&output-directory=dist) | ✅ 按钮 | 免费额度充裕 / 不限流量 | 腾讯云边缘节点，中国大陆访问速度快 |
+| [Vercel](https://vercel.com/new/clone?repository-url=https://github.com/jiuhunwl/shortvideo-html) | ✅ 按钮 | Hobby 免费版 | 零配置识别 Vite，预览部署体验佳 |
+| [Netlify](https://app.netlify.com/start/deploy?repository=https://github.com/jiuhunwl/shortvideo-html) | ✅ 按钮 | 每月 100GB 流量 | 部署流程简单，插件生态丰富 |
+| GitHub Pages | ⚙️ 手动 | 公开仓库免费 | 依赖 GitHub Actions 或已提交的 `dist/` |
+| Nginx / Apache | 🖥️ 自托管 | 取决于服务器 | 完全可控，适合自有服务器 |
+
+### ⚙️ 构建参数
+
+若平台引导页要求手动填写构建参数，按以下内容填写（仓库已内置配置文件，多数平台会自动读取，通常无需手填）：
+
+| 配置项 | 值 |
+|--------|-----|
+| 框架预设 | `Vite` |
+| 安装命令 | `npm install` |
+| 构建命令 | `npm run build` |
+| 输出目录 | `dist` |
+| Node.js 版本 | `>= 18`（推荐 `20` 或 `22`） |
+
+### 📄 已内置的部署配置
+
+| 文件 | 适用平台 | 作用 |
+|------|----------|------|
+| `wrangler.jsonc` | Cloudflare | 声明构建命令、输出目录与 SPA 单页回退 |
+| `edgeone.json` | EdgeOne Pages | 声明构建命令、Node 版本、SPA 重写与静态资源缓存策略 |
+| `vercel.json` | Vercel | 声明 Vite 预设、构建输出与路由重写 |
+| `netlify.toml` | Netlify | 声明构建命令、发布目录与 SPA 回退规则 |
+
+> ℹ️ **路由回退说明**：项目使用 `vue-router` 的 `createWebHistory` 历史模式，直接访问或刷新子路径时，托管平台需将未命中的请求回退到 `index.html`。上述配置文件均已内置该规则，无需额外设置。
+
+### 🖥️ 静态部署（自有服务器）
+
+将 `dist/` 目录上传到任意静态文件服务器：
 
 | 平台 | 说明 |
 |------|------|
 | Nginx | 高性能 Web 服务器 |
 | Apache | 流行的 Web 服务器 |
-| Netlify | 云端静态托管 |
-| Vercel | 云端静态托管 |
-| GitHub Pages | GitHub 静态页面托管 |
 
 ### Nginx 配置示例
 
