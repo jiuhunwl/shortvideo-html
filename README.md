@@ -8,11 +8,10 @@
 **☁️ 一键部署到：**
 
 [![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/jiuhunwl/shortvideo-html)
+[![Deploy with EdgeOne Pages (Global)](https://cdn.jsdelivr.net/gh/jiuhunwl/shortvideo-html@main/docs/images/edgeone-pages-deploy-global.svg)](https://edgeone.ai/pages/new?repository-url=https%3A%2F%2Fgithub.com%2Fjiuhunwl%2Fshortvideo-html&install-command=npm%20install&build-command=npm%20run%20build&output-directory=dist)
+[![Deploy with EdgeOne Pages (China)](https://cdn.jsdelivr.net/gh/jiuhunwl/shortvideo-html@main/docs/images/edgeone-pages-deploy-cn.svg)](https://console.cloud.tencent.com/edgeone/pages/new?repository-url=https%3A%2F%2Fgithub.com%2Fjiuhunwl%2Fshortvideo-html&install-command=npm%20install&build-command=npm%20run%20build&output-directory=dist)
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/jiuhunwl/shortvideo-html)
 [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/jiuhunwl/shortvideo-html)
-
-**EdgeOne Pages · 海外站**（无需备案）[![Deploy with EdgeOne Pages](https://cdn.jsdelivr.net/gh/jiuhunwl/shortvideo-html@main/docs/images/edgeone-pages-deploy.svg)](https://edgeone.ai/pages/new?repository-url=https%3A%2F%2Fgithub.com%2Fjiuhunwl%2Fshortvideo-html&install-command=npm%20install&build-command=npm%20run%20build&output-directory=dist)
-**EdgeOne Pages · 国内站**（腾讯云账号）[![Deploy with EdgeOne Pages](https://cdn.jsdelivr.net/gh/jiuhunwl/shortvideo-html@main/docs/images/edgeone-pages-deploy.svg)](https://console.cloud.tencent.com/edgeone/pages/new?repository-url=https%3A%2F%2Fgithub.com%2Fjiuhunwl%2Fshortvideo-html&install-command=npm%20install&build-command=npm%20run%20build&output-directory=dist)
 
 [English](README_en.md) | [中文](#项目简介)
 
@@ -139,7 +138,8 @@ shortvideo-html/                              # 项目根目录
 ├── vercel.json                               # Vercel 部署配置（含 SPA 回退）
 ├── netlify.toml                              # Netlify 部署配置（含 SPA 回退）
 ├── docs/images/                              # 文档用图片资源
-│   └── edgeone-pages-deploy.svg              # EdgeOne Pages 部署按钮（经 jsDelivr 分发给 README 引用）
+│   ├── edgeone-pages-deploy-global.svg       # EdgeOne Pages 海外站部署按钮（经 jsDelivr 分发）
+│   └── edgeone-pages-deploy-cn.svg           # EdgeOne Pages 国内站部署按钮（经 jsDelivr 分发）
 ├── .env.example                              # 环境变量模板
 ├── LICENSE                                   # 开源协议
 ├── README.md                                 # 项目文档（中文）
@@ -467,14 +467,10 @@ VITE_API_BASE_URL=http://localhost:8080
 ### ☁️ 一键部署按钮
 
 [![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/jiuhunwl/shortvideo-html)
+[![Deploy with EdgeOne Pages (Global)](https://cdn.jsdelivr.net/gh/jiuhunwl/shortvideo-html@main/docs/images/edgeone-pages-deploy-global.svg)](https://edgeone.ai/pages/new?repository-url=https%3A%2F%2Fgithub.com%2Fjiuhunwl%2Fshortvideo-html&install-command=npm%20install&build-command=npm%20run%20build&output-directory=dist)
+[![Deploy with EdgeOne Pages (China)](https://cdn.jsdelivr.net/gh/jiuhunwl/shortvideo-html@main/docs/images/edgeone-pages-deploy-cn.svg)](https://console.cloud.tencent.com/edgeone/pages/new?repository-url=https%3A%2F%2Fgithub.com%2Fjiuhunwl%2Fshortvideo-html&install-command=npm%20install&build-command=npm%20run%20build&output-directory=dist)
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/jiuhunwl/shortvideo-html)
 [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/jiuhunwl/shortvideo-html)
-
-**EdgeOne Pages · 海外站**（无需备案）
-[![Deploy with EdgeOne Pages](https://cdn.jsdelivr.net/gh/jiuhunwl/shortvideo-html@main/docs/images/edgeone-pages-deploy.svg)](https://edgeone.ai/pages/new?repository-url=https%3A%2F%2Fgithub.com%2Fjiuhunwl%2Fshortvideo-html&install-command=npm%20install&build-command=npm%20run%20build&output-directory=dist)
-
-**EdgeOne Pages · 国内站**（腾讯云账号）
-[![Deploy with EdgeOne Pages](https://cdn.jsdelivr.net/gh/jiuhunwl/shortvideo-html@main/docs/images/edgeone-pages-deploy.svg)](https://console.cloud.tencent.com/edgeone/pages/new?repository-url=https%3A%2F%2Fgithub.com%2Fjiuhunwl%2Fshortvideo-html&install-command=npm%20install&build-command=npm%20run%20build&output-directory=dist)
 
 ### 📦 托管平台对比
 

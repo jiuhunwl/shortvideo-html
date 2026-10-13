@@ -8,11 +8,10 @@
 **☁️ One-click deploy to:**
 
 [![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/jiuhunwl/shortvideo-html)
+[![Deploy with EdgeOne Pages (Global)](https://cdn.jsdelivr.net/gh/jiuhunwl/shortvideo-html@main/docs/images/edgeone-pages-deploy-global.svg)](https://edgeone.ai/pages/new?repository-url=https%3A%2F%2Fgithub.com%2Fjiuhunwl%2Fshortvideo-html&install-command=npm%20install&build-command=npm%20run%20build&output-directory=dist)
+[![Deploy with EdgeOne Pages (China)](https://cdn.jsdelivr.net/gh/jiuhunwl/shortvideo-html@main/docs/images/edgeone-pages-deploy-cn.svg)](https://console.cloud.tencent.com/edgeone/pages/new?repository-url=https%3A%2F%2Fgithub.com%2Fjiuhunwl%2Fshortvideo-html&install-command=npm%20install&build-command=npm%20run%20build&output-directory=dist)
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/jiuhunwl/shortvideo-html)
 [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/jiuhunwl/shortvideo-html)
-
-**EdgeOne Pages · Global** (no ICP filing needed) [![Deploy with EdgeOne Pages](https://cdn.jsdelivr.net/gh/jiuhunwl/shortvideo-html@main/docs/images/edgeone-pages-deploy.svg)](https://edgeone.ai/pages/new?repository-url=https%3A%2F%2Fgithub.com%2Fjiuhunwl%2Fshortvideo-html&install-command=npm%20install&build-command=npm%20run%20build&output-directory=dist)
-**EdgeOne Pages · China** (Tencent Cloud account) [![Deploy with EdgeOne Pages](https://cdn.jsdelivr.net/gh/jiuhunwl/shortvideo-html@main/docs/images/edgeone-pages-deploy.svg)](https://console.cloud.tencent.com/edgeone/pages/new?repository-url=https%3A%2F%2Fgithub.com%2Fjiuhunwl%2Fshortvideo-html&install-command=npm%20install&build-command=npm%20run%20build&output-directory=dist)
 
 [中文](README.md) | [English](#project-overview)
 
@@ -139,7 +138,8 @@ shortvideo-html/                              # Project root
 ├── vercel.json                               # Vercel deployment config (with SPA fallback)
 ├── netlify.toml                              # Netlify deployment config (with SPA fallback)
 ├── docs/images/                              # Images used by documentation
-│   └── edgeone-pages-deploy.svg              # EdgeOne Pages deploy button (served to README via jsDelivr)
+│   ├── edgeone-pages-deploy-global.svg       # EdgeOne Pages Global deploy button (served via jsDelivr)
+│   └── edgeone-pages-deploy-cn.svg           # EdgeOne Pages China deploy button (served via jsDelivr)
 ├── .env.example                              # Environment variable template
 ├── LICENSE                                   # License
 ├── README.md                                 # Documentation (Chinese)
@@ -467,14 +467,10 @@ This is a **pure frontend SPA** (Vue 3 + Vite) whose build output is plain stati
 ### ☁️ Deploy Buttons
 
 [![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/jiuhunwl/shortvideo-html)
+[![Deploy with EdgeOne Pages (Global)](https://cdn.jsdelivr.net/gh/jiuhunwl/shortvideo-html@main/docs/images/edgeone-pages-deploy-global.svg)](https://edgeone.ai/pages/new?repository-url=https%3A%2F%2Fgithub.com%2Fjiuhunwl%2Fshortvideo-html&install-command=npm%20install&build-command=npm%20run%20build&output-directory=dist)
+[![Deploy with EdgeOne Pages (China)](https://cdn.jsdelivr.net/gh/jiuhunwl/shortvideo-html@main/docs/images/edgeone-pages-deploy-cn.svg)](https://console.cloud.tencent.com/edgeone/pages/new?repository-url=https%3A%2F%2Fgithub.com%2Fjiuhunwl%2Fshortvideo-html&install-command=npm%20install&build-command=npm%20run%20build&output-directory=dist)
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/jiuhunwl/shortvideo-html)
 [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/jiuhunwl/shortvideo-html)
-
-**EdgeOne Pages · Global** (no ICP filing required)
-[![Deploy with EdgeOne Pages](https://cdn.jsdelivr.net/gh/jiuhunwl/shortvideo-html@main/docs/images/edgeone-pages-deploy.svg)](https://edgeone.ai/pages/new?repository-url=https%3A%2F%2Fgithub.com%2Fjiuhunwl%2Fshortvideo-html&install-command=npm%20install&build-command=npm%20run%20build&output-directory=dist)
-
-**EdgeOne Pages · China** (Tencent Cloud account)
-[![Deploy with EdgeOne Pages](https://cdn.jsdelivr.net/gh/jiuhunwl/shortvideo-html@main/docs/images/edgeone-pages-deploy.svg)](https://console.cloud.tencent.com/edgeone/pages/new?repository-url=https%3A%2F%2Fgithub.com%2Fjiuhunwl%2Fshortvideo-html&install-command=npm%20install&build-command=npm%20run%20build&output-directory=dist)
 
 ### 📦 Hosting Platform Comparison
 
