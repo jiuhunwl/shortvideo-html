@@ -8,9 +8,11 @@
 **☁️ One-click deploy to:**
 
 [![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/jiuhunwl/shortvideo-html)
-[![Deploy with EdgeOne Pages](https://cdnstatic.tencentcs.com/edgeone/pages/deploy.svg)](https://edgeone.ai/pages/new?repository-url=https%3A%2F%2Fgithub.com%2Fjiuhunwl%2Fshortvideo-html&install-command=npm%20install&build-command=npm%20run%20build&output-directory=dist)
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/jiuhunwl/shortvideo-html)
 [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/jiuhunwl/shortvideo-html)
+
+**EdgeOne Pages · Global** (no ICP filing needed) [![Deploy with EdgeOne Pages](https://cdnstatic.tencentcs.com/edgeone/pages/deploy.svg)](https://edgeone.ai/pages/new?repository-url=https%3A%2F%2Fgithub.com%2Fjiuhunwl%2Fshortvideo-html&install-command=npm%20install&build-command=npm%20run%20build&output-directory=dist)
+**EdgeOne Pages · China** (Tencent Cloud account) [![Deploy with EdgeOne Pages](https://cdnstatic.tencentcs.com/edgeone/pages/deploy.svg)](https://console.cloud.tencent.com/edgeone/pages/new?repository-url=https%3A%2F%2Fgithub.com%2Fjiuhunwl%2Fshortvideo-html&install-command=npm%20install&build-command=npm%20run%20build&output-directory=dist)
 
 [中文](README.md) | [English](#project-overview)
 
@@ -133,7 +135,7 @@ shortvideo-html/                              # Project root
 ├── tailwind.config.js                        # Tailwind CSS configuration
 ├── postcss.config.js                         # PostCSS configuration
 ├── wrangler.jsonc                            # Cloudflare deployment config (with SPA fallback)
-├── edgeone.json                              # EdgeOne Pages deployment config (with SPA fallback)
+├── edgeone.json                              # EdgeOne Pages config (Global & China, with SPA fallback)
 ├── vercel.json                               # Vercel deployment config (with SPA fallback)
 ├── netlify.toml                              # Netlify deployment config (with SPA fallback)
 ├── .env.example                              # Environment variable template
@@ -463,20 +465,44 @@ This is a **pure frontend SPA** (Vue 3 + Vite) whose build output is plain stati
 ### ☁️ Deploy Buttons
 
 [![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/jiuhunwl/shortvideo-html)
-[![Deploy with EdgeOne Pages](https://cdnstatic.tencentcs.com/edgeone/pages/deploy.svg)](https://edgeone.ai/pages/new?repository-url=https%3A%2F%2Fgithub.com%2Fjiuhunwl%2Fshortvideo-html&install-command=npm%20install&build-command=npm%20run%20build&output-directory=dist)
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/jiuhunwl/shortvideo-html)
 [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/jiuhunwl/shortvideo-html)
+
+**EdgeOne Pages · Global** (no ICP filing required)
+[![Deploy with EdgeOne Pages](https://cdnstatic.tencentcs.com/edgeone/pages/deploy.svg)](https://edgeone.ai/pages/new?repository-url=https%3A%2F%2Fgithub.com%2Fjiuhunwl%2Fshortvideo-html&install-command=npm%20install&build-command=npm%20run%20build&output-directory=dist)
+
+**EdgeOne Pages · China** (Tencent Cloud account)
+[![Deploy with EdgeOne Pages](https://cdnstatic.tencentcs.com/edgeone/pages/deploy.svg)](https://console.cloud.tencent.com/edgeone/pages/new?repository-url=https%3A%2F%2Fgithub.com%2Fjiuhunwl%2Fshortvideo-html&install-command=npm%20install&build-command=npm%20run%20build&output-directory=dist)
 
 ### 📦 Hosting Platform Comparison
 
 | Platform | One-Click | Free Tier | Highlights |
 |----------|:---------:|-----------|------------|
 | [Cloudflare](https://deploy.workers.cloudflare.com/?url=https://github.com/jiuhunwl/shortvideo-html) | ✅ Button | 100k requests/day, unlimited bandwidth | 330+ global locations, built-in SSL and DDoS protection |
-| [EdgeOne Pages](https://edgeone.ai/pages/new?repository-url=https%3A%2F%2Fgithub.com%2Fjiuhunwl%2Fshortvideo-html&install-command=npm%20install&build-command=npm%20run%20build&output-directory=dist) | ✅ Button | Generous free quota, unlimited traffic | Tencent Cloud edge nodes, fast access in Chinese mainland |
+| [EdgeOne Pages · Global](https://edgeone.ai/pages/new?repository-url=https%3A%2F%2Fgithub.com%2Fjiuhunwl%2Fshortvideo-html&install-command=npm%20install&build-command=npm%20run%20build&output-directory=dist) | ✅ Button | Unlimited traffic (5GB total per account) | Tencent Cloud international CDN, **no ICP filing**, still fast in Chinese mainland |
+| [EdgeOne Pages · China](https://console.cloud.tencent.com/edgeone/pages/new?repository-url=https%3A%2F%2Fgithub.com%2Fjiuhunwl%2Fshortvideo-html&install-command=npm%20install&build-command=npm%20run%20build&output-directory=dist) | ✅ Button | Same as above | Supports **Chinese mainland CDN nodes**; custom domains require ICP filing |
 | [Vercel](https://vercel.com/new/clone?repository-url=https://github.com/jiuhunwl/shortvideo-html) | ✅ Button | Hobby plan (free) | Zero-config Vite detection, great preview deployments |
 | [Netlify](https://app.netlify.com/start/deploy?repository=https://github.com/jiuhunwl/shortvideo-html) | ✅ Button | 100GB bandwidth/month | Simple flow, rich plugin ecosystem |
 | GitHub Pages | ⚙️ Manual | Free for public repos | Requires GitHub Actions or a committed `dist/` |
 | Nginx / Apache | 🖥️ Self-hosted | Depends on your server | Full control, ideal for your own server |
+
+### 🌏 EdgeOne Pages: Global vs China
+
+EdgeOne Pages runs **two independent sites** (accounts and project data are not shared). This repo's `edgeone.json` works for **both**, so just pick one:
+
+| Item | Global | China |
+|------|--------|-------|
+| Console | [pages.edgeone.ai](https://pages.edgeone.ai/) | [console.cloud.tencent.com/edgeone](https://console.cloud.tencent.com/edgeone) |
+| Account | Email / Google sign-up | Tencent Cloud account (WeChat / QQ / Tencent Cloud) |
+| CDN nodes | Tencent Cloud international CDN (excludes Chinese mainland) | Chinese mainland nodes available |
+| Custom domain | No ICP filing needed, handled automatically | Requires **ICP filing** + manual verification |
+| Acceleration region | Global (excludes Chinese mainland) | Choosing "Global incl. Chinese mainland" requires a filed domain |
+| Best for | Overseas audiences, domains without ICP filing | Chinese mainland audiences with a filed domain |
+
+> ℹ️ **Two things to know**
+>
+> 1. On both sites, the **system-assigned preview domains are behind access authentication**. Bind a custom domain if you need long-term public access.
+> 2. On the China site, if the acceleration region is set to "excludes Chinese mainland", **requests from Chinese mainland return 401**. To serve those users, complete ICP filing and pick a region that includes the Chinese mainland.
 
 ### ⚙️ Build Settings
 
@@ -495,7 +521,7 @@ If a platform asks you to fill in build settings manually, use the values below 
 | File | Platform | Purpose |
 |------|----------|---------|
 | `wrangler.jsonc` | Cloudflare | Declares build command, output directory, and SPA fallback |
-| `edgeone.json` | EdgeOne Pages | Declares build command, Node version, SPA rewrites, and asset caching |
+| `edgeone.json` | EdgeOne Pages (Global & China) | Declares build command, Node version, SPA rewrites, and asset caching |
 | `vercel.json` | Vercel | Declares Vite preset, build output, and route rewrites |
 | `netlify.toml` | Netlify | Declares build command, publish directory, and SPA fallback |
 

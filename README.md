@@ -8,9 +8,11 @@
 **☁️ 一键部署到：**
 
 [![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/jiuhunwl/shortvideo-html)
-[![Deploy with EdgeOne Pages](https://cdnstatic.tencentcs.com/edgeone/pages/deploy.svg)](https://edgeone.ai/pages/new?repository-url=https%3A%2F%2Fgithub.com%2Fjiuhunwl%2Fshortvideo-html&install-command=npm%20install&build-command=npm%20run%20build&output-directory=dist)
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/jiuhunwl/shortvideo-html)
 [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/jiuhunwl/shortvideo-html)
+
+**EdgeOne Pages · 海外站**（无需备案）[![Deploy with EdgeOne Pages](https://cdnstatic.tencentcs.com/edgeone/pages/deploy.svg)](https://edgeone.ai/pages/new?repository-url=https%3A%2F%2Fgithub.com%2Fjiuhunwl%2Fshortvideo-html&install-command=npm%20install&build-command=npm%20run%20build&output-directory=dist)
+**EdgeOne Pages · 国内站**（腾讯云账号）[![Deploy with EdgeOne Pages](https://cdnstatic.tencentcs.com/edgeone/pages/deploy.svg)](https://console.cloud.tencent.com/edgeone/pages/new?repository-url=https%3A%2F%2Fgithub.com%2Fjiuhunwl%2Fshortvideo-html&install-command=npm%20install&build-command=npm%20run%20build&output-directory=dist)
 
 [English](README_en.md) | [中文](#项目简介)
 
@@ -133,7 +135,7 @@ shortvideo-html/                              # 项目根目录
 ├── tailwind.config.js                        # Tailwind CSS 配置
 ├── postcss.config.js                         # PostCSS 配置
 ├── wrangler.jsonc                            # Cloudflare 部署配置（含 SPA 回退）
-├── edgeone.json                              # EdgeOne Pages 部署配置（含 SPA 回退）
+├── edgeone.json                              # EdgeOne Pages 部署配置（国内/海外站通用，含 SPA 回退）
 ├── vercel.json                               # Vercel 部署配置（含 SPA 回退）
 ├── netlify.toml                              # Netlify 部署配置（含 SPA 回退）
 ├── .env.example                              # 环境变量模板
@@ -463,20 +465,44 @@ VITE_API_BASE_URL=http://localhost:8080
 ### ☁️ 一键部署按钮
 
 [![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/jiuhunwl/shortvideo-html)
-[![Deploy with EdgeOne Pages](https://cdnstatic.tencentcs.com/edgeone/pages/deploy.svg)](https://edgeone.ai/pages/new?repository-url=https%3A%2F%2Fgithub.com%2Fjiuhunwl%2Fshortvideo-html&install-command=npm%20install&build-command=npm%20run%20build&output-directory=dist)
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/jiuhunwl/shortvideo-html)
 [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/jiuhunwl/shortvideo-html)
+
+**EdgeOne Pages · 海外站**（无需备案）
+[![Deploy with EdgeOne Pages](https://cdnstatic.tencentcs.com/edgeone/pages/deploy.svg)](https://edgeone.ai/pages/new?repository-url=https%3A%2F%2Fgithub.com%2Fjiuhunwl%2Fshortvideo-html&install-command=npm%20install&build-command=npm%20run%20build&output-directory=dist)
+
+**EdgeOne Pages · 国内站**（腾讯云账号）
+[![Deploy with EdgeOne Pages](https://cdnstatic.tencentcs.com/edgeone/pages/deploy.svg)](https://console.cloud.tencent.com/edgeone/pages/new?repository-url=https%3A%2F%2Fgithub.com%2Fjiuhunwl%2Fshortvideo-html&install-command=npm%20install&build-command=npm%20run%20build&output-directory=dist)
 
 ### 📦 托管平台对比
 
 | 平台 | 一键部署 | 免费额度 | 特点 |
 |------|:--------:|----------|------|
 | [Cloudflare](https://deploy.workers.cloudflare.com/?url=https://github.com/jiuhunwl/shortvideo-html) | ✅ 按钮 | 每日 10 万请求 / 不限带宽 | 全球 330+ 节点，自带 SSL 与 DDoS 防护 |
-| [EdgeOne Pages](https://edgeone.ai/pages/new?repository-url=https%3A%2F%2Fgithub.com%2Fjiuhunwl%2Fshortvideo-html&install-command=npm%20install&build-command=npm%20run%20build&output-directory=dist) | ✅ 按钮 | 免费额度充裕 / 不限流量 | 腾讯云边缘节点，中国大陆访问速度快 |
+| [EdgeOne Pages · 海外站](https://edgeone.ai/pages/new?repository-url=https%3A%2F%2Fgithub.com%2Fjiuhunwl%2Fshortvideo-html&install-command=npm%20install&build-command=npm%20run%20build&output-directory=dist) | ✅ 按钮 | 不限流量（账号项目总量 ≤ 5GB） | 腾讯云国际 CDN，**无需备案**，中国大陆访问亦流畅 |
+| [EdgeOne Pages · 国内站](https://console.cloud.tencent.com/edgeone/pages/new?repository-url=https%3A%2F%2Fgithub.com%2Fjiuhunwl%2Fshortvideo-html&install-command=npm%20install&build-command=npm%20run%20build&output-directory=dist) | ✅ 按钮 | 同上 | 支持**中国大陆 CDN 节点**，自定义域名需 ICP 备案 |
 | [Vercel](https://vercel.com/new/clone?repository-url=https://github.com/jiuhunwl/shortvideo-html) | ✅ 按钮 | Hobby 免费版 | 零配置识别 Vite，预览部署体验佳 |
 | [Netlify](https://app.netlify.com/start/deploy?repository=https://github.com/jiuhunwl/shortvideo-html) | ✅ 按钮 | 每月 100GB 流量 | 部署流程简单，插件生态丰富 |
 | GitHub Pages | ⚙️ 手动 | 公开仓库免费 | 依赖 GitHub Actions 或已提交的 `dist/` |
 | Nginx / Apache | 🖥️ 自托管 | 取决于服务器 | 完全可控，适合自有服务器 |
+
+### 🌏 EdgeOne Pages：海外站 vs 国内站
+
+EdgeOne Pages 有**两套相互独立的站点**（账号与项目数据不互通），本项目的 `edgeone.json` 对两者**通用**，按需选择其一部署即可：
+
+| 对比项 | 海外站（Global） | 国内站（China） |
+|--------|------------------|-----------------|
+| 控制台入口 | [pages.edgeone.ai](https://pages.edgeone.ai/) | [console.cloud.tencent.com/edgeone](https://console.cloud.tencent.com/edgeone) |
+| 账号体系 | 邮箱 / Google 注册 | 腾讯云账号（微信 / QQ / 腾讯云账号） |
+| CDN 节点 | 腾讯云国际 CDN（不含中国大陆节点） | 可选**含中国大陆节点** |
+| 自定义域名 | 无需备案，自动处理 | 需 **ICP 备案** + 手动点击验证 |
+| 加速区域 | 全球（不含中国大陆） | 选「全球（含中国大陆）」需域名已完成备案 |
+| 适用场景 | 面向海外用户、暂无备案域名 | 面向中国大陆用户、域名已备案 |
+
+> ℹ️ **两点提醒**
+>
+> 1. 两个站的**系统预设域名都带访问鉴权**（仅用于预览），如需对外长期公开访问，建议绑定自定义域名。
+> 2. 国内站若加速区域选择「不含中国大陆」，则**中国大陆访问会返回 401**；要覆盖国内用户，需域名完成备案并选择含中国大陆的区域。
 
 ### ⚙️ 构建参数
 
@@ -495,7 +521,7 @@ VITE_API_BASE_URL=http://localhost:8080
 | 文件 | 适用平台 | 作用 |
 |------|----------|------|
 | `wrangler.jsonc` | Cloudflare | 声明构建命令、输出目录与 SPA 单页回退 |
-| `edgeone.json` | EdgeOne Pages | 声明构建命令、Node 版本、SPA 重写与静态资源缓存策略 |
+| `edgeone.json` | EdgeOne Pages（国内站 / 海外站通用） | 声明构建命令、Node 版本、SPA 重写与静态资源缓存策略 |
 | `vercel.json` | Vercel | 声明 Vite 预设、构建输出与路由重写 |
 | `netlify.toml` | Netlify | 声明构建命令、发布目录与 SPA 回退规则 |
 
